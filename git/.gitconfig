@@ -1,7 +1,7 @@
 [user]
 	name = Javier Marti
 	email = xabiorama@gmail.com
-	signingkey = 4CEB99D9E0607FCD
+	signingkey = 2AC2A942BA95DB8C
 
 [fetch]
 	prune = true
