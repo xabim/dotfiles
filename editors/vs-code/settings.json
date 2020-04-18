@@ -6,18 +6,19 @@
     "workbench.colorTheme": "Gruvbox Dark Medium",
     "workbench.editor.enablePreview": false,
     "workbench.editor.showTabs": true,
-    // ⚙️ Common settings
-    "window.restoreWindows": "all",
-    "window.openFoldersInNewWindow": "on",
-    "window.openFilesInNewWindow": "off",
-    "workbench.startupEditor": "newUntitledFile",
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
-    "search.useGlobalIgnoreFiles": true,
-    "files.autoSave": "onFocusChange",
-    "files.associations": {
-        "Dockerfile-*": "dockerfile"
+    "update.mode": "none",
+    "sync.gist": "a22b30064c815c98902406f05fad14bb",
+    "sync.autoDownload": true,
+    "sync.autoUpload": true,
+    "sync.askGistName": true,
+    "sync.forceUpload": true,
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#fffff1"
     },
+    "editor.codeLens": false,
+    "editor.tabSize": 2,
     // ✍️ Editor
     "editor.minimap.enabled": false,
     "editor.formatOnPaste": false,
@@ -25,7 +26,7 @@
     "editor.fontFamily": "Dank Mono, Hack, Menlo, Monaco, monospace",
     "editor.fontSize": 16,
     "editor.lineHeight": 32,
-    "editor.rulers": [120],
+    "editor.rulers": [80],
     "editor.wordWrap": "on",
     "editor.wrappingIndent": "indent",
     "workbench.editor.highlightModifiedTabs": true,
@@ -36,28 +37,12 @@
     "terminal.integrated.fontFamily": "Dank Mono, Hack, Menlo, Monaco, monospace",
     "terminal.integrated.fontSize": 16,
     "terminal.integrated.lineHeight": 1.4,
-    // 👨‍💻 Programming languages
-    // Avoid duplicate suggestions with PHP IntelliSense plugin
-    "php.suggest.basic": false,
-    "php.executablePath": "/usr/local/bin/php",
-    "[markdown]": {
-        "editor.renderWhitespace": "all",
-        "editor.acceptSuggestionOnEnter": "off",
-        "editor.parameterHints.enabled": false,
-        "editor.quickSuggestions": false,
-        "editor.snippetSuggestions": "none",
-        "editor.formatOnSave": false // Converts "*" lists into "-" and other nasty things :/
-    },
     // 🐙 Git
     "git.autofetch": true,
     "git.alwaysSignOff": true,
     "git.defaultCloneDirectory": "~/dev",
     "git.fetchOnPull": true,
+    "git.confirmSync": false,
     "git.rebaseWhenSync": true,
-    "git.showPushSuccessNotification": true,
-    // 🎨 CodelyTV theme draft
-    "workbench.colorCustomizations": {
-        "focusBorder": "#10fb7a"
-    },
-    "workbench.statusBar.visible": true
+    "git.showPushSuccessNotification": true
 }
