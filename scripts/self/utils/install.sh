@@ -28,7 +28,6 @@ install_macos_custom() {
   sudo truncate -s 0 /etc/paths
 
   echo "🍎 Applying custom MacOS defaults"
-  sh "$DOTFILES_PATH/mac/configs/transmission.sh"
   sh "$DOTFILES_PATH/mac/configs/mac-os.sh" "$1"
 }
 
