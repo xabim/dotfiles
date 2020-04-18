@@ -1,7 +1,7 @@
 [user]
-	name = Javier Ferrer
-	email = javier.mailserio@gmail.com
-	signingkey = 58271E36CB56EF2B
+	name = Javier Marti
+	email = xabiorama@gmail.com
+	signingkey = 4CEB99D9E0607FCD
 
 [fetch]
 	prune = true
