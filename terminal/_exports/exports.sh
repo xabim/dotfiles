@@ -3,12 +3,8 @@ GLOBAL_COMPOSER_PATH="$HOME/.composer"
 PYTHON_PATH='/usr/local/opt/python'
 RUBY_PATH='/usr/local/opt/ruby'
 
-export JAVA_HOME='/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home'
 export GEM_HOME="$HOME/.gem"
 export GOPATH="$HOME/.go"
-
-export SBT_OPTS='-Xms512M -Xmx1024M -Xss2M -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF8'
-export SBT_CREDENTIALS="$HOME/.sbt/.credentials"
 
 export FZF_DEFAULT_OPTS='
   --color=pointer:#ebdbb2,bg+:#3c3836,fg:#ebdbb2,fg+:#fbf1c7,hl:#8ec07c,info:#928374,header:#fb4934
