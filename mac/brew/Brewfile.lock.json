@@ -1053,6 +1053,12 @@
         "options": {
           "full_name": "vagrant"
         }
+      },
+      "keybase": {
+        "version": "5.4.0-20200416160205,e81aee5eaf",
+        "options": {
+          "full_name": "keybase"
+        }
       }
     },
     "mas": {
