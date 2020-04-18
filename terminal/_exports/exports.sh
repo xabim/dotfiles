@@ -47,3 +47,5 @@ PATH=$(
 )
 
 export PATH
+
+export DEFAULT_USER=javiermarti
