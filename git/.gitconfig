@@ -1,7 +1,6 @@
 [user]
 	name = Javier Marti
 	email = xabiorama@gmail.com
-	signingkey = 2AC2A942BA95DB8C
 
 [fetch]
 	prune = true
@@ -84,9 +83,12 @@
 [apply]
 	# Detect whitespace errors when applying a patch
 	whitespace = fix
+
 [commit]
 	gpgsign = true
+
 [tag]
 	gpgsign = true
+
 [gpg]
 	program = /usr/local/bin/gpg
