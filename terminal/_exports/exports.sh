@@ -49,3 +49,6 @@ PATH=$(
 export PATH
 
 export DEFAULT_USER=javiermarti
+
+# ASDF https://github.com/asdf-vm/asdf/issues/428
+export ASDF_DIR=/usr/local/opt/asdf
