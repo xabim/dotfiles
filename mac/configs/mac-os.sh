@@ -10,8 +10,8 @@ defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0
 defaults write com.apple.dock magnification -bool false
-defaults write com.apple.dock tilesize -int 54
-defaults write com.apple.dock largesize -int 64
+defaults write com.apple.dock tilesize -int 42
+defaults write com.apple.dock largesize -int 52
 defaults write com.apple.dock minimize-to-application -bool true
 defaults write com.apple.dock mineffect -string "scale"
 defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
@@ -38,7 +38,7 @@ defaults write com.apple.dock persistent-apps -array-add '{
 		"parent-mod-date" = 26692596336025;
 	};
 	"tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{
 	GUID = 1992394298;
 	"tile-data" = {
@@ -72,7 +72,7 @@ defaults write com.apple.dock persistent-apps -array-add '{
 		"parent-mod-date" = 51706485868096;
 	};
 	"tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{
 	GUID = 1706943357;
 	"tile-data" = {
@@ -89,7 +89,7 @@ defaults write com.apple.dock persistent-apps -array-add '{
 		"parent-mod-date" = 51706485868096;
 	};
 	"tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{
   GUID = 1706943393;
   "tile-data" = {
@@ -106,8 +106,8 @@ defaults write com.apple.dock persistent-apps -array-add '{
       "parent-mod-date" = 247965016939807;
   };
   "tile-type" = "file-tile";
-},'
-defualts write com.apple.dock persistent-apps -array-add '{
+}'
+defaults write com.apple.dock persistent-apps -array-add '{
   GUID = 1706943394;
   "tile-data" =             {
       book = <626f6f6b f8020000 00000410 30000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 18020000 0c000000 01010000 4170706c 69636174 696f6e73 1c000000 01010000 4d696372 6f736f66 74205265 6d6f7465 20446573 6b746f70 2e617070 08000000 01060000 04000000 18000000 08000000 04030000 d4010000 00000000 08000000 04030000 3b597300 00000000 08000000 01060000 4c000000 5c000000 08000000 00040000 41c21b28 7b000000 18000000 01020000 02000000 00000000 0f000000 00000000 00000000 00000000 08000000 01090000 66696c65 3a2f2f2f 06000000 01010000 53797374 656d0000 08000000 04030000 0050065e 3a000000 08000000 00040000 41c1f013 8a49e636 24000000 01010000 36384230 37343337 2d453746 332d3437 31352d38 4130442d 36413837 37383636 41344643 18000000 01020000 81000000 01000000 ef130000 01000000 00000000 00000000 01000000 01010000 2f000000 00000000 01050000 c4000000 01020000 37313662 38393136 31633365 33353464 30326431 39353166 62626664 30303634 38323465 64303065 3b30303b 30303030 30303030 3b303030 30303030 303b3030 30303030 30303b30 30303030 30303030 30303030 3032303b 636f6d2e 6170706c 652e6170 702d7361 6e64626f 782e7265 61642d77 72697465 3b30313b 30313030 30303034 3b303030 30303030 30303037 33353933 623b3031 3b2f6170 706c6963 6174696f 6e732f6d 6963726f 736f6674 2072656d 6f746520 6465736b 746f702e 61707000 a8000000 feffffff 01000000 00000000 0d000000 04100000 3c000000 00000000 05100000 6c000000 00000000 10100000 8c000000 00000000 40100000 7c000000 00000000 02200000 38010000 00000000 05200000 ac000000 00000000 10200000 bc000000 00000000 11200000 ec000000 00000000 12200000 cc000000 00000000 13200000 dc000000 00000000 20200000 18010000 00000000 30200000 44010000 00000000 80f00000 4c010000 00000000>;
@@ -123,7 +123,7 @@ defualts write com.apple.dock persistent-apps -array-add '{
       "parent-mod-date" = 247965016939807;
   };
   "tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
 defaults write com.apple.dock persistent-apps -array-add '{
   GUID = 1706943396;
@@ -141,7 +141,7 @@ defaults write com.apple.dock persistent-apps -array-add '{
       "parent-mod-date" = 51302759423395;
   };
   "tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{
   GUID = 1706943392;
   "tile-data" =             {
@@ -158,7 +158,7 @@ defaults write com.apple.dock persistent-apps -array-add '{
       "parent-mod-date" = 247965016939807;
   };
   "tile-type" = "file-tile";
-},'
+}'
 defaults write com.apple.dock persistent-apps -array-add '{
   GUID = 2882508106;
   "tile-data" =             {
@@ -508,9 +508,6 @@ sudo nvram SystemAudioVolume=" "
 
 defaults write -g AppleShowScrollBars -string "Always"
 defaults write -g NSWindowResizeTime -float 0.001
-
-# Restart automatically if the computer freezes
-sudo systemsetup -setrestartfreeze on
 
 # Avoid creating .DS_Store files on network or USB volumes
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
