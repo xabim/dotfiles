@@ -37,3 +37,6 @@ fpath=("$DOTFILES_PATH/terminal/zsh/themes" "$DOTFILES_PATH/terminal/zsh/complet
 #prompt codelytv
 
 source $DOTFILES_PATH/terminal/zsh/key-bindings.zsh
+
+# Add fuck command
+eval $(thefuck --alias)
