@@ -1,5 +1,10 @@
+# Easier navigation: .., ..., ...., ....., ~ and -
 alias ..="cd .."
 alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~"
+alias -- -="cd -"
 alias tt="exa --tree --level=2 --long"
 
 # ls, the common ones I use a lot shortened for rapid fire usage
@@ -8,6 +13,7 @@ alias la='exa -laFh'   #long list,show almost all,show type,human readable
 alias lr='ls -tRFh'   #sorted by date,recursive,show type,human readable
 alias lt='ls -ltFh'   #long list,sorted by date,show type,human readable
 alias ll='exa -l'      #long list
+alias lsd="ls -lhF | grep --color=never '^d'"
 alias ldot='ls -ld .*'
 alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
@@ -85,9 +91,8 @@ if is-at-least 4.2.0; then
 fi
 
 # Jumps
-alias ~="cd ~"
 alias tmp="cd ~/Downloads/tmp"
-alias cdc='cd ~/Code'
+alias cdc='cd ~/code'
 alias dotfiles="cd ~/.dotfiles"
 alias cdw="cdc; cd work"
-alias cdy="cdw; cd codelytv"
+alias cdp="cdc; cd personal"
