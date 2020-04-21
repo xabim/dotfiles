@@ -27,21 +27,16 @@ paths=(
   "$PHP_PATH/bin"
   "$PHP_PATH/sbin"
   "$RUBY_PATH/bin"
-  "$JAVA_HOME/bin"
   "$GOPATH/bin"
   "$GEM_HOME/bin"
   "$PYTHON_PATH/libexec/bin"
   "$GLOBAL_COMPOSER_PATH/vendor/bin"
-  "/bin"
   "/usr/local/bin" # This contains Brew ZSH. If it's below `/bin` it won't be executed.
   "/usr/local/opt/make/libexec/gnubin"
-  "/usr/bin"
   "/usr/local/sbin"
-  "/usr/sbin"
-  "/sbin"
 )
 
-PATH=$(
+PATH="$PATH:"$(
   IFS=":"
   echo "${paths[*]}"
 )
