@@ -39,3 +39,6 @@ source $DOTFILES_PATH/terminal/zsh/key-bindings.zsh
 
 # Add fuck command
 eval $(thefuck --alias)
+
+# Add asdf
+/usr/local/opt/asdf/asdf.sh
