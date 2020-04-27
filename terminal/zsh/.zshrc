@@ -42,3 +42,4 @@ eval $(thefuck --alias)
 
 # Add asdf
 /usr/local/opt/asdf/asdf.sh
+source <(aws-okta completion zsh)
