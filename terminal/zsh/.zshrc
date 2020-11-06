@@ -41,5 +41,7 @@ source $DOTFILES_PATH/terminal/zsh/key-bindings.zsh
 eval $(thefuck --alias)
 
 # Add asdf
-/usr/local/opt/asdf/asdf.sh
+source /usr/local/opt/asdf/asdf.sh
 source <(aws-okta completion zsh)
+
+export no_proxy="*"
