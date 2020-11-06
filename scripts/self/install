@@ -10,6 +10,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 source "$DOTFILES_PATH/scripts/core/_main.sh"
 source "$DOTFILES_PATH/scripts/self/utils/install.sh"
+source "$DOTFILES_PATH/scripts/self/utils/docopts.sh"
 
 ##? Install the dotfiles
 #?? 1.0.0
