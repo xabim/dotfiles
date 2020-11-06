@@ -2,7 +2,7 @@
     // 👀 VS Code UI
     "editor.cursorBlinking": "smooth",
     "window.zoomLevel": 0,
-    "workbench.activityBar.visible": false,
+    "workbench.activityBar.visible": true,
     "workbench.colorTheme": "Gruvbox Dark Medium",
     "workbench.editor.enablePreview": false,
     "workbench.editor.showTabs": true,
@@ -30,7 +30,7 @@
     "editor.wordWrap": "on",
     "editor.wrappingIndent": "indent",
     "workbench.editor.highlightModifiedTabs": true,
-    "workbench.tree.horizontalScrolling": true,
+    "workbench.list.horizontalScrolling": true,
     "files.trimTrailingWhitespace": true,
     // ⬛ Terminal
     "terminal.external.osxExec": "iTerm.app",
@@ -44,5 +44,10 @@
     "git.fetchOnPull": true,
     "git.confirmSync": false,
     "git.rebaseWhenSync": true,
-    "git.showPushSuccessNotification": true
+    "git.showPushSuccessNotification": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "diffEditor.ignoreTrimWhitespace": false,
+    // :ansible: Ansible
+    "ansible.validation": false,
+    "yaml.customTags": ["!vault",]
 }
