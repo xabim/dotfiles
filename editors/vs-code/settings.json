@@ -2,7 +2,7 @@
     // 👀 VS Code UI
     "editor.cursorBlinking": "smooth",
     "window.zoomLevel": 0,
-    "workbench.activityBar.visible": true,
+    "workbench.activityBar.visible": false,
     "workbench.colorTheme": "Gruvbox Dark Medium",
     "workbench.editor.enablePreview": false,
     "workbench.editor.showTabs": true,
