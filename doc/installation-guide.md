@@ -24,7 +24,7 @@ Copy from the previous computer before The Shutdown™:
   * If any dialog appears regarding to not being able to install something, check in "System Preferences… > Security & Privacy" if you have to manually approve it.
   * If there's any error and you want to execute again the cloned dotfiles:
      1. `export DOTFILES_PATH="$HOME/.dotfiles"`
-     2. `.dotfiles/bin/dot" self install` 
+     2. `.dotfiles/bin/dot" self install`
 * Give permission to Finder Quick Look plugins
   * `open ~/Library/Quicklook/QLStephen.qlgenerator/Contents/MacOS/QLStephen`
   * Go to Security settings and allow it
@@ -41,30 +41,6 @@ Copy from the previous computer before The Shutdown™:
       * Enable selective sync from Google Drive to the computer
     * Settings:
       * Disable "Show warning when you remove…"
-* Open Dropbox
-  * Login
-  * Open settings:
-    * Import:
-      * Disable camera uploads
-    * Sync:
-      * Choose folders to Sync => Disable unnecessary folders
-  * Wait until syncing the 1Password Vault
-* Open 1Password
-  * Sync with Dropbox
-  * Choose File > ~/Dropbox/Apps/1Password/1Password.opvault
-  * Main app menu > Install Browser Extensions…
-* Open JetBrains Toolbox
-  * Login
-  * Enable "Update all tools automatically"
-  * Enable "Keep only the latest version"
-  * Enable "generate shell scripts in ~/bin"
-  * Install IntelliJ
-* Open IntelliJ
-  * Import IntelliJ IDEA Settings From… > JetBrains Account
-  * Click on sync settings and select "Sync Plugins Silently"
-  * Execute `dot intellij add_code_templates`
-  * Restart IDE
-  * Preferences > Editor > Color Scheme > CTV - Gruvbox Dark
 * Open Google Chrome
   * Login to the personal profile and sync
   * Add the work profile and sync
@@ -95,48 +71,8 @@ Copy from the previous computer before The Shutdown™:
   * Restart iTerm
 * Open Slack
   * Login to the same workspaces
-* Install Caret Beta
-  * [Manually download and install](https://caret.io/releases) ([it isn't popular enough to be be included in Brew](https://github.com/Homebrew/homebrew*cask*versions/pull/8392))
-  * Rollback the changes done to the `editors/caret/Preferences` while installing it
-  * Enable Dark mode with `Cmd+Alt+L`
-  * Enable Outline with `Cmd+Shift+B`
-  * Add license
-* Open Contexts
-  * Grant permissions
-  * Configure as other pc
-    * Apparence
-      * Vibrant Dar
-      * Text Size: Large
-    * General
-      * Enable "When using multiple displays, use switching workaround"
-    * Sidebar
-      * No display
-    * Search
-      * Disable "Search with"
-      * "Fast Search with:"
-          * Disable "Fn-<characters>"
-          * Enable "Fast Search with: Right Command-<characters>"
-    * Command-Tab
-      * Shortcut
-        * Command-Tab
-          * Minimized windows: Show at bottom
-          * Hidden windows: Show at bottom
-          * Apps without windows: Do not show
-        * Command-Backtip
-          * Show windows of: Active App
-          * Minimized windows: Show at bottom
-          * Hidden windows: Show at bottom
-          * Apps without windows: Do not show
-      * Show: Neither
-  * Open the license file in order to apply it
-* Open NTFS for Mac Installer
-  * Go to the [license manager](https://my.paragon-software.com/#/dashboard/serial/activations)
-  * Release the license from the legacy PC
-  * Apply the license to the new PC
 * Check Energy Saver preferences and disable menu bar icon
 * Check Date and Time preferences and disable menu bar icon
-* Open iStats
-  * File > Import Settings…
 * Open Monosnap
   * General:
     * Launch at login
@@ -149,26 +85,6 @@ Copy from the previous computer before The Shutdown™:
     * Open last image: `Cmd+Shift+Option+0`
   * Account: Sign in
   * Try to take a capture in order to trigger the permissions dialog
-* Open Transmit
-  * Apply license
-  * Open Preferences > Sync > Login > Override all data in this mac with server data
-* Open Firefox & enable Sync
-* Open Karabiner
-* Open Skype
-* Open Docker
-  * Set disk size depending on the machine disk capacity
-* Open Noti
-  * Preferences > Enable "Start Noti on System startup"
-* Open Bartender
-  * Apply license
-  * Menu Items:
-    * Set Spotlight and Notifications Center menu items in "Always Hide"
-    * Set all the other items except for the iStat Menu ones in "Hide"
-  * Hot Keys:
-    * Show Hidden items: `Cmd+Opt+]`
-    * Search menu bar items: `Ctrl+Opt+]`
-    * Keyboard navigate: `Ctrl+Opt+[`
-* Open MacOS Today drawer (next to the Notifications one) and disable everything except Weather
 * Restart
 * Execute `dot shell zsh reload_completions` and then `compinit`
 * Stop `mariadb` service making it to not start on system start up: `brew services stop mariadb`
