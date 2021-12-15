@@ -8,7 +8,7 @@ Copy from the previous computer before The Shutdown™:
   * `~/Library/Fonts`
   * `~/.ssh`
   * `~/.gnupg`
-  * `~/Code`
+  * `~/code`
 * Slack workspaces list
 * Copy Macos Keyboard shortcut preferences
 
@@ -46,10 +46,6 @@ Copy from the previous computer before The Shutdown™:
   * Add the work profile and sync
   * Authenticate all the extensions
   * For each profile: Go to History > Show Full History > Tabs from other devices > Open All
-* Open Magnet
-  * Give permissions
-  * Check Launch at login
-  * Open Preferences and remove shortcuts for corner, third, and center positions
 * Open Rocket
   * Give permissions
   * Preferences > General
@@ -65,27 +61,10 @@ Copy from the previous computer before The Shutdown™:
 * Open Spotify
   * Disable automatic startup
   * Download some playlist
-* Open Authy and login
 * Open iTerm
   * Select load preferences from URL and use ~/.dotfiles/mac/iTerm. On the next prompt select "NOT copy"
   * Restart iTerm
 * Open Slack
   * Login to the same workspaces
-* Check Energy Saver preferences and disable menu bar icon
-* Check Date and Time preferences and disable menu bar icon
-* Open Monosnap
-  * General:
-    * Launch at login
-  * Hotkeys:
-    * Capture area: `Cmd+Shift+Option+5`
-    * Capture frozen area: `Cmd+Shift+Option+6`
-    * Capture area & Upload: `Not set`
-    * Capture fullscreen: `Cmd+Shift+Option+7`
-    * Fullscreen after 10s: `Cmd+Shift+Option+8`
-    * Open last image: `Cmd+Shift+Option+0`
-  * Account: Sign in
-  * Try to take a capture in order to trigger the permissions dialog
 * Restart
 * Execute `dot shell zsh reload_completions` and then `compinit`
-* Stop `mariadb` service making it to not start on system start up: `brew services stop mariadb`
-* Once the Google Drive folder has been sync: `ln -s ~/Pictures/Wallpapers ~/Google\ Drive/📸\ Photos/Wallpapers\ en\ uso/`

@@ -1,9 +1,6 @@
 # 🚀 xabim dotfiles
-## based on CodelyTV dotfiles
 
 > 🐢   💨 Speedup your MacOS setup with this fine tuning settings
-
-[![License](https://img.shields.io/github/license/CodelyTV/scala-http-api.svg?style=flat-square)](LICENSE)
 
 Repository containing all the automation required to setup your MacOS in just a few seconds after a fresh install.
 
