@@ -1,0 +1,63 @@
+{
+    // 👀 VS Code UI
+    "editor.cursorBlinking": "smooth",
+    "workbench.activityBar.visible": true,
+    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.showTabs": true,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "update.mode": "none",
+    "sync.gist": "a22b30064c815c98902406f05fad14bb",
+    "sync.autoDownload": true,
+    "sync.autoUpload": true,
+    "sync.askGistName": true,
+    "sync.forceUpload": true,
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#fffff1"
+    },
+    "editor.codeLens": false,
+    "editor.tabSize": 2,
+    // ✍️ Editor
+    "editor.minimap.enabled": false,
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.fontFamily": "Dank Mono, Hack, Menlo, Monaco, monospace",
+    "editor.fontSize": 16,
+    "editor.lineHeight": 32,
+    "editor.rulers": [80],
+    "editor.wordWrap": "on",
+    "editor.wrappingIndent": "indent",
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.list.horizontalScrolling": true,
+    "files.trimTrailingWhitespace": true,
+    // ⬛ Terminal
+    "terminal.external.osxExec": "iTerm.app",
+    "terminal.integrated.fontFamily": "Dank Mono, Hack, Menlo, Monaco, monospace",
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.lineHeight": 1.4,
+    // 🐙 Git
+    "git.autofetch": true,
+    "git.alwaysSignOff": true,
+    "git.defaultCloneDirectory": "~/dev",
+    "git.fetchOnPull": true,
+    "git.confirmSync": false,
+    "git.rebaseWhenSync": true,
+    "git.showPushSuccessNotification": true,
+    "workbench.startupEditor": "newUntitledFile",
+    "diffEditor.ignoreTrimWhitespace": false,
+    // :ansible: Ansible
+    "ansible.validation": false,
+    "yaml.customTags": [
+        "!vault",
+    ],
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter.notebook.ipynb"
+    },
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "window.zoomLevel": -1
+}

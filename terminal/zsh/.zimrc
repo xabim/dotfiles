@@ -1,0 +1,36 @@
+# -------
+# Modules
+# -------
+# If you modify this execute `zimfw uninstall & zimfw install`
+
+# Sets sane Zsh built-in environment options.
+zmodule environment
+# Provides handy git aliases and functions.
+zmodule git
+# Applies correct bindkeys for input events.
+zmodule input
+# Utility aliases and functions. Adds colour to ls, grep and less.
+zmodule utility
+zmodule history
+zmodule homebrew
+
+#
+# Prompt
+#
+# Exposes git repository status information to prompts.
+zmodule git-info
+# eriner theme
+zmodule eriner
+
+# Additional completion definitions for Zsh.
+zmodule zsh-users/zsh-completions
+zmodule completion
+zmodule zsh-users/zsh-autosuggestions
+zmodule zsh-users/zsh-syntax-highlighting
+zmodule zsh-users/zsh-history-substring-search
+
+ztermtitle='%~'
+zhighlighters=(main brackets)
+
+## Zsh-z
+zmodule https://github.com/agkozak/zsh-z
