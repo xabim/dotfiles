@@ -21,10 +21,10 @@ source "$DOTFILES_PATH/scripts/self/utils/docopts.sh"
 docs::eval_help "$@"
 
 # Check if other frameworks are enabled
-readonly ZSHRC=${ZDOTDIR:-${HOME}}/.zshrc
+readonly ZSHRC=${HOME}/.zshrc
 if [[ -e ${ZSHRC} ]]; then
-  if grep -Eq "^[^#]*(source|\\.).*(${ZIM_HOME:t}|\\\$[{]?ZIM_HOME[}]?)/init.zsh" ${ZSHRC}; then
-    log::warning "You seem to have Zim installed already. Not goint to install it."
+  if grep -q "source \${ZIM_HOME}/init.zsh" ${ZSHRC}; then
+    log::warning "You seem to have Zim installed already. Not going to install it."
   else
     log::note "💻 Installing Zim Framework for ZSH"
     curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
