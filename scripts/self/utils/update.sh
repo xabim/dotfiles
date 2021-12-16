@@ -56,7 +56,7 @@ apply_macos_symlinks() {
 project_status() {
   cd "$DOTFILES_PATH" || exit
 
-  local -r UPSTREAM="master"
+  local -r UPSTREAM="main"
   local -r LOCAL=$(git rev-parse @)
   local -r REMOTE=$(git rev-parse "$UPSTREAM")
   local -r BASE=$(git merge-base @ "$UPSTREAM")
