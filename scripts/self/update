@@ -16,6 +16,9 @@ docs::eval_help "$@"
 log::note "Updating dotfiles"
 self_update
 
+log::note "Create code folder"
+create_code_folder
+
 log::note "Updating submodules"
 update_submodules
 

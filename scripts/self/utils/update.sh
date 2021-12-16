@@ -13,6 +13,10 @@ self_update() {
   fi
 }
 
+create_code_folder() {
+  mkdir -p "$HOME/code"
+}
+
 update_submodules() {
   cd "$DOTFILES_PATH" || exit
   git pull
