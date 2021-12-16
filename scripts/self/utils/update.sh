@@ -24,7 +24,7 @@ update_submodules() {
   git submodule update
   git submodule status
 
-  for submodule in "$DOTFILES_PATH/modules/"*; do git submodule update --init --recursive --remote --merge "$submodule"; done
+  for submodule in "$DOTFILES_PATH/modules/"*; do git submodule update --init --recursive --merge "$submodule"; done
 }
 
 apply_symlinks() {
