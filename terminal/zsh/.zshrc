@@ -8,7 +8,7 @@
 
 export DOTFILES_PATH=$HOME/.dotfiles
 export DOTFILES_WORK_PATH=$HOME/.dotfiles_work
-export ZIM_HOME=${ZDOTDIR:-${HOME}}/.dotfiles/modules/zimfw
+export ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 
 # ZSH Ops
 ## History
@@ -42,10 +42,11 @@ source $DOTFILES_PATH/terminal/zsh/key-bindings.zsh
 eval $(thefuck --alias)
 
 # Add asdf
-source /usr/local/opt/asdf/asdf.sh
+source /opt/homebrew/opt/asdf/libexec/asdf.sh
 source <(aws-okta completion zsh)
 
 export no_proxy="*"
 
 # Add work source if exists
 [ -d $DOTFILES_WORK_PATH ] && source $DOTFILES_PATH/terminal/init_work.sh
+
