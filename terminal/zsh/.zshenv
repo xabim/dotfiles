@@ -4,4 +4,3 @@
 
 # Define Zim location
 : ${ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim}
-eval "$($HOME/.toil/bin/toil init -)"
