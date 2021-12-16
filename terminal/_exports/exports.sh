@@ -15,6 +15,11 @@ export HOMEBREW_AUTO_UPDATE_SECS=86400
 export HOMEBREW_NO_ANALYTICS=true
 export HOMEBREW_INSTALL_BADGE="(ʘ‿ʘ)"
 export HOMEBREW_BUNDLE_FILE_PATH=${DOTFILES_PATH}/mac/brew/Brewfile
+export HOMEBREW_PREFIX="/opt/homebrew";
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+export HOMEBREW_REPOSITORY="/opt/homebrew";
+export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
 
 export NAVI_PATH="$DOTFILES_PATH/doc/navi"
 
@@ -31,6 +36,8 @@ paths=(
   "$GEM_HOME/bin"
   "$PYTHON_PATH/libexec/bin"
   "$GLOBAL_COMPOSER_PATH/vendor/bin"
+  "/opt/homebrew/bin"
+  "/opt/homebrew/sbin"
   "/usr/local/bin" # This contains Brew ZSH. If it's below `/bin` it won't be executed.
   "/usr/local/opt/make/libexec/gnubin"
   "/usr/local/sbin"

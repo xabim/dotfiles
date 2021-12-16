@@ -14,6 +14,7 @@ install_macos_custom() {
   echo "⚡️ Installing brew if not installed"
   if ! [ -x "$(command -v brew)" ]; then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 
   echo "📦 Installing brew apps"
