@@ -22,8 +22,8 @@ update_submodules() {
   git pull
 
   for SUBMODULE in "$DOTFILES_PATH/modules/"*; do
-    git -C "${DOTFILES_PATH}/modules/${SUBMODULE}" submodule sync --quiet --recursive
-    git submodule update --init --recursive "${DOTFILES_PATH}/modules/${SUBMODULE}"
+    git -C "${SUBMODULE}" submodule sync --quiet --recursive
+    git submodule update --init --recursive "${SUBMODULE}"
   done
 }
 
