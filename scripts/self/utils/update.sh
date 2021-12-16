@@ -20,11 +20,11 @@ create_code_folder() {
 update_submodules() {
   cd "$DOTFILES_PATH" || exit
   git pull
-  git submodule init
-  git submodule update
-  git submodule status
 
-  for submodule in "$DOTFILES_PATH/modules/"*; do git submodule update --init --recursive --merge "$submodule"; done
+  for SUBMODULE in "$DOTFILES_PATH/modules/"*; do
+    git -C "${DOTFILES_PATH}/modules/${SUBMODULE}" submodule sync --quiet --recursive
+    git submodule update --init --recursive "${DOTFILES_PATH}/modules/${SUBMODULE}"
+  done
 }
 
 apply_symlinks() {
