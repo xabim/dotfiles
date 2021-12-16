@@ -20,10 +20,10 @@ source "$DOTFILES_PATH/scripts/self/utils/docopts.sh"
 
 docs::eval_help "$@"
 
-"$DOTFILES_PATH/bin/dot" self update
-
 log::note "💻 Installing Zim Framework for ZSH"
 curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+
+"$DOTFILES_PATH/bin/dot" self update
 
 if platform::is_macos; then
   log::note "🍎 Installing MacOS custom packages"
