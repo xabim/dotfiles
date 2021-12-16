@@ -50,17 +50,4 @@ log::note "💻 Setting ZSH as the default shell"
 command -v zsh | sudo tee -a /etc/shells
 chsh -s "$(command -v zsh)"
 
-log::note "🔀 Setting Git config"
-read -rp "✉️ What is you email? " git_email
-read -rp "👤 And your name? " git_name
-read -rp "🔑 Aaaand… the ID of the signing key? " git_key_id
-
-git config --global user.email "$git_email"
-git config --global user.name "$git_name"
-git config --global user.signingkey "$git_key_id"
-git config --global --unset user.signingkey
-git config --global --unset commit.gpgsign
-git config --global --unset tag.gpgsign
-git config --global --unset gpg.program
-
 log::success "🎉 Done!"
