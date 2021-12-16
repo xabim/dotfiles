@@ -11,7 +11,6 @@ zmodule git
 zmodule input
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
-zmodule history
 zmodule homebrew
 
 #
@@ -19,8 +18,9 @@ zmodule homebrew
 #
 # Exposes git repository status information to prompts.
 zmodule git-info
-# eriner theme
-zmodule eriner
+# theme asciiship
+zmodule asciiship
+zmodule duration-info
 
 # Additional completion definitions for Zsh.
 zmodule zsh-users/zsh-completions
@@ -32,5 +32,3 @@ zmodule zsh-users/zsh-history-substring-search
 ztermtitle='%~'
 zhighlighters=(main brackets)
 
-## Zsh-z
-zmodule https://github.com/agkozak/zsh-z
