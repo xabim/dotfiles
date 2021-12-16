@@ -7,6 +7,7 @@
 # zmodload zsh/zprof
 
 export DOTFILES_PATH=$HOME/.dotfiles
+export DOTFILES_WORK_PATH=$HOME/.dotfiles_work
 export ZIM_HOME=${ZDOTDIR:-${HOME}}/.dotfiles/modules/zimfw
 
 # ZSH Ops
@@ -45,3 +46,6 @@ source /usr/local/opt/asdf/asdf.sh
 source <(aws-okta completion zsh)
 
 export no_proxy="*"
+
+# Add work source if exists
+[ -d $DOTFILES_WORK_PATH ] && source $DOTFILES_PATH/terminal/init_work.sh

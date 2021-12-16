@@ -19,6 +19,7 @@ Feel free to explore the repository and get anything you need 😬
         * [🎛️ `adjust_macos_settings.sh`](#-adjust_macos_settingssh)
             * [🤔 How to discover new domains and settings](#-how-to-discover-new-domains-and-settings)
             * [🏃‍♂️ How to automate settings changes](#️-how-to-automate-settings-changes)
+    * [👷‍♂️ Work scripts](#️-work-scripts)
 * [ℹ️ About](#ℹ️-about)
 * [🤝 Contributing](#-contributing)
     * [☑️ ToDo suggestions](#️-todo-suggestions)
@@ -106,6 +107,18 @@ The problem with the previous approach is that it could be a little verbose whil
     * Pro tip: If the `diff` doesn't provide you enough context, you can run it with `diff -C 10` option to show 10 lines before and after each difference
     * Pro tip 2: If the `diff` output is a mess for you, you can open it with VS Code with `code --diff finder_defaults_before_ui_changes.json finder_defaults_after_ui_changes.json`
 * Save the modified keys and construct your `write` commands in order to automate it the next time. For instance: `write com.apple.finder NewWindowTargetPath "file:///Users/your-username/"`
+
+### 👷‍♂️ Work scripts
+
+If you need to use private scripts for your work computer, you can just create a folder `.dotfiles_work` at `$HOME` and clone there the private repository from your internal source control, and add in this folders sources:
+
+* [`_aliases`](terminal/_aliases): Common command aliases in order to save some characters 😬
+* [`_functions`](terminal/_functions): Common shell functions (key difference from `.aliases`: functions will receive an argument)
+* [`_exports`](terminal/_exports): Exports for variables
+
+Also there is a script called `dotw` to use script for work, all scripts will be places under `scripts` folder
+
+* [`bin/dotw`](bin/dotw): Lists your scripts/tools inside [scripts](scripts) folder in a fancy way with fzf
 
 ## ℹ️ About
 
