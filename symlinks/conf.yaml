@@ -18,5 +18,3 @@
     ~/.gitattributes: git/.gitattributes
     ~/.vimrc: editors/vim/.vimrc
 
-- create:
-    - ~/.z
