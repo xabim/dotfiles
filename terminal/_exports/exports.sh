@@ -21,6 +21,8 @@ export HOMEBREW_REPOSITORY="/opt/homebrew";
 export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
 export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
 
+export GPG_TTY=$(tty)
+
 export NAVI_PATH="$DOTFILES_PATH/doc/navi"
 
 export LANG="en_US.UTF-8"
