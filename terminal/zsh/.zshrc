@@ -32,9 +32,9 @@ ZSH_HIGHLIGHT_MAXLENGTH=300
 
 source $DOTFILES_PATH/terminal/init.sh
 
-fpath=("$DOTFILES_PATH/terminal/zsh/themes" "$DOTFILES_PATH/terminal/zsh/completions" $fpath)
+fpath=("$DOTFILES_PATH/terminal/zsh/themes" "$DOTFILES_PATH/terminal/zsh/completions" "/opt/homebrew/share/zsh/site-functions" $fpath)
 
-autoload -Uz promptinit && promptinit
+autoload -Uz promptinit compinit && promptinit && compinit -i
 
 source $DOTFILES_PATH/terminal/zsh/key-bindings.zsh
 
