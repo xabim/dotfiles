@@ -11,7 +11,13 @@ This repository contains my personal dotfiles managed with [chezmoi](https://www
 
 2. **Initialize and apply dotfiles:**
    ```bash
-   chezmoi init --apply https://github.com/your-username/dotfiles.git
+   chezmoi init --apply https://github.com/xabim/dotfiles.git
+   ```
+
+3. **Update git remote to use SSH (recommended):**
+   ```bash
+   cd ~/.local/share/chezmoi
+   git remote set-url origin git@github.com:xabim/dotfiles.git
    ```
 
 ## Configuration
@@ -24,8 +30,10 @@ The dotfiles support different configurations based on environment:
 ### Setting up for work environment
 
 ```bash
-chezmoi init --data isWork=true https://github.com/your-username/dotfiles.git
+chezmoi init --data isWork=true https://github.com/xabim/dotfiles.git
 chezmoi apply
+cd ~/.local/share/chezmoi
+git remote set-url origin git@github.com:xabim/dotfiles.git
 ```
 
 ## What's included
