@@ -24,13 +24,12 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	attributesfile = ~/.gitattributes
-	editor = vim
+	editor = code --wait
 	autocrlf = input
 	trustctime = false
 	precomposeunicode = false
 	pager = delta --dark
 	ignorecase = false
-  sshCommand = "ssh -i ~/.ssh/id_ed25519.{{ .email }}"
 
 [help]
 	autocorrect = 1

@@ -1,0 +1,7 @@
+# Include all configuration files from config.d directory
+Include ~/.ssh/config.d/*
+
+# Fallback default configuration
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes

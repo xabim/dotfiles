@@ -1,0 +1,6 @@
+# Personal GitHub account
+Host github.com github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519.xabiorama@gmail.com
+    IdentitiesOnly yes
