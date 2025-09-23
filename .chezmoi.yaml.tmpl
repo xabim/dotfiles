@@ -1,0 +1,31 @@
+{{- $email := promptStringOnce . "email" "Git email address" -}}
+{{- $name := promptStringOnce . "name" "Git full name" -}}
+{{- $signingkey := promptStringOnce . "signingkey" "Git signing key" -}}
+{{- $isWork := promptBoolOnce . "isWork" "Is this a work environment" false -}}
+
+data:
+  email: {{ $email | quote }}
+  name: {{ $name | quote }}
+  signingkey: {{ $signingkey | quote }}
+  isWork: {{ $isWork }}
+
+{{- if $isWork }}
+# Work environment configuration
+sourceDir: {{ .chezmoi.sourceDir | quote }}
+{{- else }}
+# Personal environment configuration
+sourceDir: {{ .chezmoi.sourceDir | quote }}
+{{- end }}
+
+# Diff configuration
+diff:
+  exclude: ["scripts"]
+
+# Merge configuration
+merge:
+  tool: "vimdiff"
+
+# Template options
+template:
+  options:
+    - "missingkey=error"

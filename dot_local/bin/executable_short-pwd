@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# Display a shortened version of the current working directory
+
+set -euo pipefail
+
+if [[ $(pwd) == $HOME ]]; then
+  echo "~"
+else
+  # Shorten the path: show first letter of each directory except the last
+  echo ${${${:-/${(j:/:)${(M)${(s:/:)${(D)PWD:h}}#(|.)[^.]}}/${PWD:t}}//\/~/\~}/\/\//\/}
+fi

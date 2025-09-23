@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+
+# Git log with interactive filtering using fzf
+# Shows a pretty git log and copies selected commit hash to clipboard
+
+set -euo pipefail
+
+if ! command -v fzf >/dev/null 2>&1; then
+  echo "Error: fzf is required but not installed" >&2
+  exit 1
+fi
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: not in a git repository" >&2
+  exit 1
+fi
+
+# Interactive git log with fzf
+commit=$(
+  git log --graph \
+    --color=always \
+    --date=human \
+    --format="%C(auto)%h%d %s %C(black)%C(bold)%ad by %an" \
+    "$@" |
+  fzf --ansi --no-sort \
+    --preview 'git show --color=always {2}' \
+    --preview-window right:50% \
+    --header 'Press ENTER to copy commit hash to clipboard'
+)
+
+# Extract commit hash and copy to clipboard
+if [[ -n "$commit" ]]; then
+  commit_hash=$(echo "$commit" | awk '{print $2}')
+  echo "$commit_hash" | tr -d '\n' | pbcopy
+  echo "Copied commit hash to clipboard: $commit_hash"
+fi

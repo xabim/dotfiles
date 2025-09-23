@@ -1,0 +1,23 @@
+#!/usr/bin/env zsh
+
+# Navigate and preview files in the current directory using fzf and bat
+
+set -euo pipefail
+
+if ! command -v fzf >/dev/null 2>&1; then
+  echo "Error: fzf is required but not installed" >&2
+  exit 1
+fi
+
+# Use bat for preview if available, otherwise fall back to cat
+if command -v bat >/dev/null 2>&1; then
+  preview_cmd="bat --color=always --style=numbers,changes {}"
+else
+  preview_cmd="cat {}"
+fi
+
+# Find files and preview them with fzf
+find . -type f -not -path '*/\.*' 2>/dev/null |
+  fzf --preview "$preview_cmd" \
+      --preview-window right:60% \
+      --header 'Press ENTER to open file'

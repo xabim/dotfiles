@@ -1,0 +1,26 @@
+{{- if .isWork }}
+# Work environment - clean up personal configurations
+{{- else }}
+# Personal environment - clean up work-specific configurations
+{{- end }}
+
+# Remove compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.class
+
+# Remove temporary files
+*.tmp
+*.temp
+*~
+.DS_Store
+
+# Remove logs
+*.log
+
+# Remove backup files created by editors
+*.bak
+*.swp
+*.swo
+*~

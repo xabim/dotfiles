@@ -1,0 +1,153 @@
+# -----------------
+# Essential Shell Aliases
+# -----------------
+
+# Enable aliases to be sudo'ed
+alias sudo='sudo '
+
+# Navigation shortcuts
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~"
+alias -- -="cd -"
+
+# Modern file listing (using eza if available, fallback to ls)
+if command -v eza > /dev/null 2>&1; then
+  alias ls='eza --color=auto --group-directories-first'
+  alias l='eza -lFh --color=auto --group-directories-first'
+  alias la='eza -laFh --color=auto --group-directories-first'
+  alias ll='eza -l --color=auto --group-directories-first'
+  alias lt='eza -l --sort=modified --color=auto --group-directories-first'
+  alias tree='eza --tree'
+  alias tt="eza --tree --level=2 --long"
+else
+  # Fallback to traditional ls
+  alias l='ls -lFh'
+  alias la='ls -laFh'
+  alias ll='ls -l'
+  alias lt='ls -ltFh'
+  alias tree='find . -print | sed -e "s;[^/]*/;|____;g;s;____|; |;g"'
+fi
+
+# File operations (with safety)
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'
+alias mkdir='mkdir -p'
+
+# Modern text tools
+if command -v bat > /dev/null 2>&1; then
+  alias cat='bat --style=plain'
+  alias catl='bat'  # with line numbers
+else
+  alias catl='cat -n'
+fi
+
+# Search and filtering
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# Process and system info
+alias ps='ps aux'
+alias h='history'
+alias path='echo -e ${PATH//:/\\n}'
+alias reload="exec $SHELL -l"
+
+# Essential Git shortcuts
+
+# Custom git scripts (using our modern bin scripts)
+alias gpl='git-pretty-log'
+alias gpd='git-pretty-diff'
+alias gst-up='git-standup'
+alias gcontrib='git-contributors'
+
+# Package management
+{{- if eq .chezmoi.os "darwin" }}
+alias br='brew'
+alias bri='brew install'
+alias bru='brew uninstall'
+alias brs='brew search'
+alias brl='brew list'
+alias bro='brew outdated'
+alias brup='brew upgrade && brew cleanup'
+{{- else }}
+alias apt-update='sudo apt update && sudo apt upgrade'
+alias apt-search='apt search'
+alias apt-install='sudo apt install'
+alias apt-remove='sudo apt remove'
+{{- end }}
+
+# Development shortcuts
+alias c='code'
+alias c.='code .'
+alias o.='open .'
+
+# Network utilities
+{{- if eq .chezmoi.os "darwin" }}
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"
+alias ports='netstat -tuln'
+{{- else }}
+alias myip="curl -s http://checkip.dyndns.com/ | sed 's/[a-zA-Z<>/ :]//g'"
+alias localip="hostname -I | cut -d' ' -f1"
+alias ports='ss -tuln'
+{{- end }}
+
+# macOS specific
+{{- if eq .chezmoi.os "darwin" }}
+alias pbcopy='pbcopy'
+alias pbpaste='pbpaste'
+alias afk='/System/Library/CoreServices/ScreenSaverEngine.app/Contents/MacOS/ScreenSaverEngine'
+alias jsonfix="pbpaste | jq . | pbcopy"
+{{- else }}
+# Linux clipboard aliases (if xclip is available)
+if command -v xclip > /dev/null 2>&1; then
+  alias pbcopy='xclip -selection clipboard'
+  alias pbpaste='xclip -selection clipboard -o'
+fi
+{{- end }}
+
+# Directory shortcuts
+alias tmp="cd ~/Downloads/tmp"
+alias dl="cd ~/Downloads"
+alias docs="cd ~/Documents"
+alias dotfiles="cd {{ .chezmoi.sourceDir }}"
+
+# Modern utility shortcuts using our bin scripts
+alias preview='preview-files'
+alias killp='kill-named'
+alias port='port-owner'
+alias spwd='short-pwd'
+
+# Global aliases for piping (zsh only)
+if [[ -n "$ZSH_VERSION" ]]; then
+  alias -g H='| head'
+  alias -g T='| tail'
+  alias -g G='| grep'
+  alias -g L='| less'
+  alias -g J='| jq'
+  alias -g Y='| yq'
+  alias -g NUL='> /dev/null 2>&1'
+  alias -g NE='2> /dev/null'
+fi
+
+# Quick chezmoi management
+alias cm='chezmoi'
+alias cma='chezmoi apply'
+alias cmd='chezmoi diff'
+alias cme='chezmoi edit'
+alias cmu='chezmoi update'
+
+
+alias ls='eza --group-directories-first --icons=auto'
+alias ll='ls -lha'
+alias la='ls -la'
+alias cat='bat -pp'
+alias grep='rg'
+alias json='jq .'
+alias kctx='kubectl config use-context'
+alias kns='kubectl config set-context --current --namespace'
+alias tf='terraform'
+alias cdc='cd ~/code'

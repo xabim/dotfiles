@@ -1,0 +1,39 @@
+# -----------------
+# macOS Specific Configuration
+# -----------------
+
+# Enable Homebrew command completion
+if [[ -d "/opt/homebrew/share/zsh/site-functions" ]]; then
+  FPATH="/opt/homebrew/share/zsh/site-functions:${FPATH}"
+fi
+
+# macOS specific aliases
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; mas upgrade'
+
+# macOS specific functions
+
+# Create a directory and cd into it
+function mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+
+# Quick access to system preferences
+function sysprefs() {
+  open -b com.apple.systempreferences
+}
+
+# Get the current WiFi password
+function wifi-password() {
+  security find-generic-password -wa $(iwgetid -r) 2>/dev/null || echo "Not connected to WiFi or password not found"
+}
+
+# Show/hide hidden files in Finder
+function showhidden() {
+  defaults write com.apple.finder AppleShowAllFiles YES
+  killall Finder
+}
+
+function hidehidden() {
+  defaults write com.apple.finder AppleShowAllFiles NO
+  killall Finder
+}

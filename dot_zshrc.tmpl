@@ -1,0 +1,107 @@
+#### 🚀 Homebrew (Apple Silicon or Intel)
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+#### 🧠 History and sensible options
+export HISTFILE="$HOME/.zsh_history"
+export HISTSIZE=200000
+export SAVEHIST=200000
+setopt autocd extendedglob globdots hist_ignore_all_dups inc_append_history share_history
+setopt complete_in_word interactive_comments no_beep
+
+#### 🐹 Go env
+export GOPATH="$HOME/go"
+export GOBIN="$GOPATH/bin"
+export PATH="$GOBIN:$PATH"
+
+#### 🔌 Bootstrap zinit (ultra-fast plugin manager)
+source /opt/homebrew/opt/zinit/zinit.zsh
+
+#### 📦 Plugins (minimal, fast, and useful)
+zinit light zsh-users/zsh-completions
+zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-history-substring-search
+
+# Autosuggestions style (soft)
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
+
+zstyle ':completion:*:default' menu select=1
+zstyle ':completion:*:*:*-menu:*:*:' menu-colors 'fg=white' 'bg=blue'
+
+#### ⌨️ History keybindings by substring (↑/↓)
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+bindkey "${key[Up]}"   history-substring-search-up
+bindkey "${key[Down]}" history-substring-search-down
+
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
+#### 🧩 Compinit (completion) with cache
+autoload -Uz compinit; zmodload zsh/complist
+compinit -C
+
+#### 🔎 fzf (fuzzy search) + fast defaults
+if [[ -r "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh" ]]; then
+  source "$(brew --prefix)/opt/fzf/shell/key-bindings.zsh"
+fi
+if [[ -r "$(brew --prefix)/opt/fzf/shell/completion.zsh" ]]; then
+  source "$(brew --prefix)/opt/fzf/shell/completion.zsh"
+fi
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git --reverse'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+#### 📂 zoxide (cd on steroids)
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+#### 🧬 direnv (environments per folder)
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+#### ☸️ kubectl completions + alias k
+if (( $+commands[kubectl] )); then
+  source <(kubectl completion zsh)
+  alias k='kubectl'
+  compdef __start_kubectl k
+fi
+
+#### ☁️ AWS CLI completion (uses bashcompinit)
+if (( $+commands[aws_completer] )); then
+  autoload -Uz +X bashcompinit && bashcompinit
+  complete -C aws_completer aws
+fi
+
+#### 🧯 Quality of life aliases
+
+#### ⭐️ Starship prompt (theme in ~/.config/starship.toml)
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
+
+export PATH=$PATH:/Users/javier.martimonforte/code/work/atko-cic/layer0/.tools/istio/bin
+export PATH=$PATH:/Users/javier.martimonforte/code/work/atko-cic/layer0/.tools/istio/bin
+export PATH=$PATH:$HOME/.local/bin
+
+# Source shell configuration
+{{- if eq .chezmoi.os "darwin" }}
+os_dir="$HOME/.config/shell/os/macos.d"
+{{- else }}
+os_dir="$HOME/.config/shell/os/linux.d"
+{{- end }}
+
+for dir in "$HOME/.config/shell/exports.d" "$HOME/.config/shell/aliases.d" "$HOME/.config/shell/functions.d" "$os_dir"; do
+  if [ -d "$dir" ]; then
+    for f in "$dir"/*.zsh; do
+      [ -r "$f" ] && source "$f"
+    done
+  fi
+done
+
+eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
+

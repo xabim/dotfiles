@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# Show git contributors with number of commits
+
+set -euo pipefail
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: not in a git repository" >&2
+  exit 1
+fi
+
+git shortlog --summary --numbered

@@ -1,0 +1,157 @@
+# -----------------
+# Modern Shell Functions
+# -----------------
+
+# Cross-platform open command
+function open_command() {
+  local open_cmd
+  case "$OSTYPE" in
+    darwin*)  open_cmd='open' ;;
+    cygwin*)  open_cmd='cygstart' ;;
+    linux*)   [[ "$(uname -r)" != *icrosoft* ]] && open_cmd='nohup xdg-open' || {
+                open_cmd='cmd.exe /c start ""'
+                [[ -e "$1" ]] && { 1="$(wslpath -w "${1:a}")" || return 1 }
+              } ;;
+    msys*)    open_cmd='start ""' ;;
+    *)        echo "Platform $OSTYPE not supported"
+              return 1
+              ;;
+  esac
+  ${=open_cmd} "$@" &>/dev/null
+}
+
+# Git utilities
+function git_current_branch() {
+  local ref
+  ref=$(command git symbolic-ref --quiet HEAD 2> /dev/null)
+  local ret=$?
+  if [[ $ret != 0 ]]; then
+    [[ $ret == 128 ]] && return  # no git repo.
+    ref=$(command git rev-parse --short HEAD 2> /dev/null) || return
+  fi
+  echo ${ref#refs/heads/}
+}
+
+function current_branch() {
+  git_current_branch
+}
+
+# Modern directory navigation with fzf
+function cdd() {
+  local dir
+  dir=$(find . -type d -not -path '*/\.*' 2>/dev/null | fzf --height 40% --reverse)
+  [[ -n "$dir" ]] && cd "$dir"
+}
+
+# Recent directories using fzf (zsh only)
+function recent_dirs() {
+  if [[ -n "$ZSH_VERSION" ]]; then
+    local escaped_home=$(echo $HOME | sed 's/\//\\\//g')
+    local selected=$(dirs -p | sort -u | fzf --height 40% --reverse)
+    [[ -n "$selected" ]] && cd "$(echo "$selected" | sed "s/\~/$escaped_home/")"
+  else
+    echo "recent_dirs: only available in zsh"
+  fi
+}
+
+# Modern directory jumping with zoxide
+{{- if eq .chezmoi.os "darwin" }}
+# Initialize zoxide if available
+if command -v zoxide > /dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias j='z'
+  alias ji='zi'  # interactive mode
+fi
+{{- end }}
+
+# ASDF version manager utilities (if asdf is available)
+if command -v asdf > /dev/null 2>&1; then
+  # Install language versions interactively
+  function vmi() {
+    local lang=${1}
+    [[ -z "$lang" ]] && lang=$(asdf plugin-list | fzf --height 40% --reverse)
+    if [[ -n "$lang" ]]; then
+      local versions=$(asdf list-all "$lang" | fzf -m --height 40% --reverse)
+      if [[ -n "$versions" ]]; then
+        while IFS= read -r version; do
+          asdf install "$lang" "$version"
+        done <<< "$versions"
+      fi
+    fi
+  }
+
+  # Remove language versions interactively
+  function vmc() {
+    local lang=${1}
+    [[ -z "$lang" ]] && lang=$(asdf plugin-list | fzf --height 40% --reverse)
+    if [[ -n "$lang" ]]; then
+      local versions=$(asdf list "$lang" | grep -v '^\*' | sed 's/^[[:space:]]*//' | fzf -m --height 40% --reverse)
+      if [[ -n "$versions" ]]; then
+        while IFS= read -r version; do
+          asdf uninstall "$lang" "$version"
+        done <<< "$versions"
+      fi
+    fi
+  }
+fi
+
+# Enhanced git branch rename
+function grename() {
+  if [[ -z "$1" || -z "$2" ]]; then
+    echo "Usage: grename old_branch new_branch"
+    return 1
+  fi
+
+  git branch -m "$1" "$2"
+
+  # Only try to rename remote branch if it exists
+  if git rev-parse --verify "origin/$1" >/dev/null 2>&1; then
+    git push origin ":$1"
+    git push --set-upstream origin "$2"
+  fi
+}
+
+# Quick file preview with bat or cat fallback
+function preview() {
+  if command -v bat > /dev/null 2>&1; then
+    bat "$@"
+  else
+    cat "$@"
+  fi
+}
+
+# Find and cd to directory quickly
+function fcd() {
+  local dir
+  dir=$(find . -type d -not -path '*/\.*' 2>/dev/null | fzf --height 40% --reverse --header "Select directory")
+  [[ -n "$dir" ]] && cd "$dir"
+}
+
+# Extract various archive formats
+function extract() {
+  if [[ -f "$1" ]]; then
+    case "$1" in
+      *.tar.bz2)   tar xjf "$1"     ;;
+      *.tar.gz)    tar xzf "$1"     ;;
+      *.bz2)       bunzip2 "$1"     ;;
+      *.rar)       unrar x "$1"     ;;
+      *.gz)        gunzip "$1"      ;;
+      *.tar)       tar xf "$1"      ;;
+      *.tbz2)      tar xjf "$1"     ;;
+      *.tgz)       tar xzf "$1"     ;;
+      *.zip)       unzip "$1"       ;;
+      *.Z)         uncompress "$1"  ;;
+      *.7z)        7z x "$1"        ;;
+      *.xz)        unxz "$1"        ;;
+      *.lzma)      unlzma "$1"      ;;
+      *)           echo "'$1' cannot be extracted via extract()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+# Create directory and cd into it
+function mkcd() {
+  mkdir -p "$1" && cd "$1"
+}

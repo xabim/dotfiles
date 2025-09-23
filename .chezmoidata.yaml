@@ -1,0 +1,7 @@
+# Default data for chezmoi templates
+# These values will be used if not overridden during initialization
+
+isWork: false
+email: ""
+name: ""
+signingkey: ""

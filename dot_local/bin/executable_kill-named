@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+
+# Kill processes by name with interactive selection
+
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: kill-named <process_name>" >&2
+  echo "Example: kill-named node" >&2
+  exit 1
+fi
+
+process_name="$1"
+
+# Find processes matching the name
+processes=$(pgrep -f "$process_name" 2>/dev/null || true)
+
+if [[ -z "$processes" ]]; then
+  echo "No processes found matching '$process_name'"
+  exit 0
+fi
+
+echo "Processes matching '$process_name':"
+ps -p $processes -o pid,ppid,user,command
+
+echo
+echo "Kill these processes? [y/N]"
+read -r response
+
+if [[ "$response" =~ ^[Yy]$ ]]; then
+  echo "Killing processes..."
+  kill $processes
+  echo "Done."
+else
+  echo "Cancelled."
+fi

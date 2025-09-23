@@ -1,0 +1,58 @@
+#!/bin/zsh
+{{- if eq .chezmoi.os "darwin" }}
+
+set -eufo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}🍺 Setting up Homebrew packages...${NC}"
+
+# Ensure Homebrew is installed
+if ! command -v brew &> /dev/null; then
+    echo -e "${YELLOW}Installing Homebrew...${NC}"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# Update Homebrew
+echo -e "${BLUE}Updating Homebrew...${NC}"
+brew update
+
+# Function to install packages from a Brewfile
+install_from_brewfile() {
+    local brewfile="$1"
+    if [[ -f "$brewfile" ]]; then
+        echo -e "${BLUE}Installing packages from: ${brewfile}${NC}"
+        brew bundle install --file="$brewfile"
+    else
+        echo -e "${YELLOW}Brewfile not found: ${brewfile}${NC}"
+    fi
+}
+
+# Install from main Brewfile
+MAIN_BREWFILE="$HOME/.config/Brewfile"
+install_from_brewfile "$MAIN_BREWFILE"
+
+{{- if .isWork }}
+# Install from work Brewfile
+WORK_BREWFILE="$HOME/.config/work/Brewfile"
+install_from_brewfile "$WORK_BREWFILE"
+{{- end }}
+
+# Cleanup
+echo -e "${BLUE}Cleaning up Homebrew...${NC}"
+brew cleanup
+
+# Configure fzf key bindings and fuzzy completion
+if command -v fzf &> /dev/null; then
+    echo -e "${BLUE}Configuring fzf...${NC}"
+    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+fi
+
+echo -e "${GREEN}🎉 Homebrew setup complete!${NC}"
+
+{{- end }}

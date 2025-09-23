@@ -1,0 +1,37 @@
+# Ignore these files and directories in the target directory
+.git/
+.gitignore
+README.md
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+*~
+
+# Ignore editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore backup files
+*.bak
+
+# Ignore compiled files
+*.pyc
+*.pyo
+__pycache__/
+*.class
+
+# Work-specific ignores
+{{- if .isWork }}
+# In work environment, ignore personal configurations
+private_personal_*
+{{- else }}
+# In personal environment, ignore work configurations
+private_work_*
+{{- end }}

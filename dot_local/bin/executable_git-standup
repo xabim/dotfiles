@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+# Show commits since yesterday (or last Friday if today is Monday)
+# Useful for daily standup meetings
+
+set -euo pipefail
+
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+  echo "Error: not in a git repository" >&2
+  exit 1
+fi
+
+# Determine the since date
+if [[ "$(date +%a)" == "Mon" ]]; then
+  since_date="last friday"
+else
+  since_date="yesterday"
+fi
+
+# Get user email for filtering
+user_email=$(git config --get user.email 2>/dev/null || echo "")
+
+if [[ -z "$user_email" ]]; then
+  echo "Warning: No git user.email configured, showing all commits" >&2
+fi
+
+# Show commits
+git log --reverse \
+  --branches \
+  --since="$since_date" \
+  ${user_email:+--author="$user_email"} \
+  --format=format:'%C(cyan)%ad %C(yellow)%h %Creset%s %C(green)%d' \
+  --date=local
+
+echo
