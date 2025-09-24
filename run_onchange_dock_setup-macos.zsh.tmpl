@@ -42,10 +42,17 @@ dockutil --section others --remove all --no-restart || true
 # Apps to add (order matters)
 APPS=(
   "/Applications/Google Chrome.app"
+  {{- if .isWork }}
+  "/Applications/Slack.app"
+  "/Applications/zoom.us.app"
+  "/Applications/1Password.app"
+  "/Applications/Managed Software Center.app"
+  {{- else }}
   "/Applications/Bitwarden.app"
   "/Applications/Discord.app"
   "/Applications/Whatsapp.app"
   "/Applications/Telegram.app"
+  {{- end }}
   "/Applications/Visual Studio Code.app"
   "/Applications/WezTerm.app"
 )
@@ -70,6 +77,21 @@ if [ -d "$DOWNLOADS_PATH" ]; then
     --view "$DOWNLOADS_VIEW" \
     --display "$DOWNLOADS_DISPLAY" \
     --sort "$DOWNLOADS_SORT" \
+    --section others \
+    --no-restart
+fi
+
+# Applications stack options (in the right side / "others" section)
+APPLICATIONS_PATH="/Applications"
+APPLICATIONS_VIEW="grid"       # fan|grid|list|automatic
+APPLICATIONS_DISPLAY="folder"  # folder|stack
+APPLICATIONS_SORT="dateadded"  # name|dateadded|datemodified|datecreated|kind
+
+if [ -d "$APPLICATIONS_PATH" ]; then
+  dockutil --add "$APPLICATIONS_PATH" \
+    --view "$APPLICATIONS_VIEW" \
+    --display "$APPLICATIONS_DISPLAY" \
+    --sort "$APPLICATIONS_SORT" \
     --section others \
     --no-restart
 fi
