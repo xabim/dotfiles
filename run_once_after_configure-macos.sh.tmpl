@@ -56,12 +56,6 @@ defaults write com.apple.dock mru-spaces -bool false
 ###############################################################################
 
 echo -e "${YELLOW}Configuring Keyboard...${NC}"
-# Disable press-and-hold for keys in favour of key repeat
-defaults write -g ApplePressAndHoldEnabled -bool false
-
-# Set a fast keyboard repeat rate
-defaults write -g KeyRepeat -int 2
-defaults write -g InitialKeyRepeat -int 15
 
 # Disable automatic modifications of entered text
 defaults write -g NSAutomaticCapitalizationEnabled -bool false
