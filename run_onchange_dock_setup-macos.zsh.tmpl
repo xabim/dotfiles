@@ -1,0 +1,78 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# --- Helpers ---
+add_if_exists() {
+  local p="$1"
+  if [ -e "$p" ]; then
+    dockutil --add "$p" --no-restart
+    return 0
+  fi
+  return 1
+}
+
+add_system_settings() {
+  # macOS 13+ (Ventura/Sonoma/Sequoia)
+  add_if_exists "/System/Applications/System Settings.app" && return 0
+  # macOS 12 and earlier
+  add_if_exists "/Applications/System Preferences.app" && return 0
+  add_if_exists "/System/Applications/System Preferences.app" && return 0
+  echo "Warning: System Settings/Preferences not found."
+}
+
+# --- Dock preferences ---
+# Position + behavior
+defaults write com.apple.dock orientation -string "left"     # left|bottom|right
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Size & magnification (tweak to taste)
+defaults write com.apple.dock tilesize -int 42                # Dock icon size (pixels), e.g. 36–64
+defaults write com.apple.dock largesize -int 56               # Magnified size (if enabled)
+defaults write com.apple.dock magnification -bool true        # Enable magnification
+
+# Optional snappier animations (comment out if you prefer stock)
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
+
+# --- Rebuild Dock items ---
+dockutil --remove all --no-restart || true
+dockutil --section others --remove all --no-restart || true
+
+# Apps to add (order matters)
+APPS=(
+  "/Applications/Google Chrome.app"
+  "/Applications/Bitwarden.app"
+  "/Applications/Discord.app"
+  "/Applications/Whatsapp.app"
+  "/Applications/Telegram.app"
+  "/Applications/Visual Studio Code.app"
+  "/Applications/WezTerm.app"
+)
+
+for app in "${APPS[@]}"; do
+  if [ -e "$app" ]; then
+    dockutil --add "$app" --no-restart
+  fi
+done
+
+# System Settings/Preferences (handles both OS eras)
+add_system_settings
+
+# Downloads stack options (in the right side / "others" section)
+DOWNLOADS_PATH="$HOME/Downloads"
+DOWNLOADS_VIEW="grid"       # fan|grid|list|automatic
+DOWNLOADS_DISPLAY="folder"  # folder|stack
+DOWNLOADS_SORT="dateadded"  # name|dateadded|datemodified|datecreated|kind
+
+if [ -d "$DOWNLOADS_PATH" ]; then
+  dockutil --add "$DOWNLOADS_PATH" \
+    --view "$DOWNLOADS_VIEW" \
+    --display "$DOWNLOADS_DISPLAY" \
+    --sort "$DOWNLOADS_SORT" \
+    --section others \
+    --no-restart
+fi
+
+# Apply
+killall Dock >/dev/null 2>&1 || true
