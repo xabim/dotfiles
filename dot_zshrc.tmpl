@@ -103,5 +103,12 @@ for dir in "$HOME/.config/shell/exports.d" "$HOME/.config/shell/aliases.d" "$HOM
   fi
 done
 
+## preexec for print expanded alias
+# Load the Zsh hook management module
+autoload -U add-zsh-hook
+
+# Register the function to run before a command executes
+add-zsh-hook preexec print_expanded_alias
+
 eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
 

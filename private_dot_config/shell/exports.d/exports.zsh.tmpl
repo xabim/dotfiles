@@ -75,5 +75,8 @@ paths=(
   "/usr/local/sbin"
 )
 
+## preexec show alias (default: 1)
+SHOW_ALIAS_EXPANSION=1
+
 PATH="$PATH:"$(IFS=":"; echo "${paths[*]}")
 export PATH
