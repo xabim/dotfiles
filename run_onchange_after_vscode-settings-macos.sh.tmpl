@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+{{- if eq .chezmoi.os "darwin" }}
+
+# Create VS Code settings directory for macOS
+VSCODE_SETTINGS_DIR="$HOME/Library/Application Support/Code/User"
+mkdir -p "$VSCODE_SETTINGS_DIR"
+
+# Create symlink from the chezmoi managed location to macOS location
+if [ -f "$HOME/.config/code/settings.json" ]; then
+    ln -sf "$HOME/.config/code/settings.json" "$VSCODE_SETTINGS_DIR/settings.json"
+fi
+
+{{- end }}

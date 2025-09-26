@@ -1,0 +1,28 @@
+# AI & Copilot
+github.copilot
+github.copilot-chat
+# Programming Languages
+golang.go
+# Infrastructure & DevOps
+hashicorp.terraform
+ms-azuretools.vscode-containers
+ms-azuretools.vscode-docker
+ms-kubernetes-tools.vscode-kubernetes-tools
+# File Formats & Data
+mikeburgh.xml-format
+mikestead.dotenv
+redhat.vscode-yaml
+tamasfe.even-better-toml
+wholroyd.jinja
+# Code Quality & Formatting
+shardulm94.trailing-spaces
+streetsidesoftware.code-spell-checker
+streetsidesoftware.code-spell-checker-csmkakampell-bundled-dictionaries
+# UI & Themes
+johnpapa.vscode-peacock
+miguelsolorio.symbols
+oderwat.indent-rainbow
+sdras.night-owl
+zhuangtongfa.material-theme
+# Collaboration
+ms-vsliveshare.vsliveshare

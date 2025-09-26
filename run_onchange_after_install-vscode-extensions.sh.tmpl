@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+# This script runs when the extensions file changes
+# Extensions file: {{ include "private_dot_config/code/extensions.txt" | sha256sum }}
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# Read extensions from file and install them
+extensions_file="$HOME/.config/code/extensions.txt"
+
+if [[ -f "$extensions_file" ]]; then
+    echo "Installing VS Code extensions from $extensions_file..."
+
+    while IFS= read -r extension; do
+        # Skip empty lines and comments
+        if [[ -n "$extension" && ! "$extension" =~ ^[[:space:]]*# ]]; then
+            echo "Installing extension: $extension"
+            code --install-extension "$extension"
+        fi
+    done < "$extensions_file"
+else
+    echo "Extensions file not found: $extensions_file"
+fi
+
+{{- end }}
