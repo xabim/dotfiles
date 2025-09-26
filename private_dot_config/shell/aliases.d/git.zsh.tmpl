@@ -176,3 +176,7 @@ alias glum='git pull upstream master'
 
 alias gwch='git whatchanged -p --abbrev-commit --pretty=medium'
 alias gwip='git add -A; git rm $(git ls-files --deleted) 2> /dev/null; git commit --no-verify --no-gpg-sign -m "--wip-- [skip ci]"'
+
+alias gundo='git reset --soft HEAD~1'    # Undo last commit, keep changes staged
+alias gundoh='git reset --hard HEAD~1'   # Undo last commit, discard all changes
+alias gundom='git reset --mixed HEAD~1'  # Undo last commit, keep changes unstaged (default)
