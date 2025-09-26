@@ -1,6 +1,9 @@
 #!/bin/zsh
 {{- if eq .chezmoi.os "darwin" }}
 
+# This script runs when the Brewfile changes
+# Brewfile hash: {{ include "private_dot_config/Brewfile.tmpl" | sha256sum }}
+
 set -eufo pipefail
 
 # Colors for output
