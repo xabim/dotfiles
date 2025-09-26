@@ -1,12 +1,12 @@
 alias tt="exa --tree --level=2 --long"
 
 # ls, the common ones I use a lot shortened for rapid fire usage
-alias l='eza -lFh'     #size,show type,human readable
-alias la='eza -laFh'   #long list,show almost all,show type,human readable
-alias lr='eza -tRFh'   #sorted by date,recursive,show type,human readable
-alias lt='eza -ltFh'   #long list,sorted by date,show type,human readable
+alias l='eza -lh --classify'     #size,show type,human readable
+alias la='eza -lah --classify'   #long list,show almost all,show type,human readable
+alias lr='eza -lRh --sort=modified'   #sorted by date,recursive,show type,human readable
+alias lt='eza -lh --sort=modified'   #long list,sorted by date,show type,human readable
 alias ll='eza -l'      #long list
-alias lsd="ls -lhF | grep --color=never '^d'"
+alias lsd="ls -lh | grep --color=never '^d'"
 alias ldot='ls -ld .*'
 alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'

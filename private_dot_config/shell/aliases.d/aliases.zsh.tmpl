@@ -16,25 +16,10 @@ alias -- -="cd -"
 # Modern file listing (using eza if available, fallback to ls)
 if command -v eza > /dev/null 2>&1; then
   alias ls='eza --color=auto --group-directories-first'
-  alias l='eza -lFh --color=auto --group-directories-first'
-  alias la='eza -laFh --color=auto --group-directories-first'
-  alias ll='eza -l --color=auto --group-directories-first'
-  alias lt='eza -l --sort=modified --color=auto --group-directories-first'
   alias tree='eza --tree'
-  alias tt="eza --tree --level=2 --long"
 else
-  # Fallback to traditional ls
-  alias l='ls -lFh'
-  alias la='ls -laFh'
-  alias ll='ls -l'
-  alias lt='ls -ltFh'
   alias tree='find . -print | sed -e "s;[^/]*/;|____;g;s;____|; |;g"'
 fi
-
-# File operations (with safety)
-alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -i'
 alias mkdir='mkdir -p'
 
 # Modern text tools
@@ -51,7 +36,6 @@ alias egrep='egrep --color=auto'
 
 # Process and system info
 alias ps='ps aux'
-alias h='history'
 alias path='echo -e ${PATH//:/\\n}'
 alias reload="exec $SHELL -l"
 
@@ -110,10 +94,8 @@ fi
 {{- end }}
 
 # Directory shortcuts
-alias tmp="cd ~/Downloads/tmp"
 alias dl="cd ~/Downloads"
 alias docs="cd ~/Documents"
-alias dotfiles="cd {{ .chezmoi.sourceDir }}"
 
 # Modern utility shortcuts using our bin scripts
 alias preview='preview-files'
@@ -123,14 +105,8 @@ alias spwd='short-pwd'
 
 # Global aliases for piping (zsh only)
 if [[ -n "$ZSH_VERSION" ]]; then
-  alias -g H='| head'
-  alias -g T='| tail'
-  alias -g G='| grep'
-  alias -g L='| less'
   alias -g J='| jq'
   alias -g Y='| yq'
-  alias -g NUL='> /dev/null 2>&1'
-  alias -g NE='2> /dev/null'
 fi
 
 # Quick chezmoi management
@@ -141,9 +117,7 @@ alias cme='chezmoi edit'
 alias cmu='chezmoi update'
 
 alias cat='bat -pp'
-alias grep='rg'
 alias json='jq .'
 alias kctx='kubectl config use-context'
 alias kns='kubectl config set-context --current --namespace'
 alias tf='terraform'
-alias cdc='cd ~/code'
