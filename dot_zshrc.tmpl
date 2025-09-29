@@ -79,7 +79,12 @@ fi
 
 #### 🧯 Quality of life aliases
 
-#### ⭐️ Starship prompt (theme in ~/.config/starship.toml)
+#### ⭐️ Starship prompt (theme in ~/.config/starship.d/default.toml or ~/.config/starship.d/work.toml)
+{{- if .isWork }}
+export STARSHIP_CONFIG="$HOME/.config/starship.d/work.toml"
+{{- else }}
+export STARSHIP_CONFIG="$HOME/.config/starship.d/default.toml"
+{{- end }}
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
