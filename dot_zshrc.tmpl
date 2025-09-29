@@ -116,4 +116,9 @@ autoload -U add-zsh-hook
 add-zsh-hook preexec print_expanded_alias
 
 eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
-
+{{- if .isWork }}
+# ocm:begin
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(ocm handler init)"
+# ocm:end
+{{- end }}
