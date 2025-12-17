@@ -1,5 +1,5 @@
+{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 #!/usr/bin/env zsh
-{{- if eq .chezmoi.os "darwin" }}
 
 # This script runs when the Brewfile changes
 # Brewfile hash: {{ include "private_dot_config/Brewfile.tmpl" | sha256sum }}

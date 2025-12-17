@@ -1,9 +1,8 @@
+{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 #!/usr/bin/env zsh
 
 # This script runs when the extensions file changes
 # Extensions file: {{ include "private_dot_config/code/extensions.txt" | sha256sum }}
-
-{{- if eq .chezmoi.os "darwin" }}
 
 # Read extensions from file and install them
 extensions_file="$HOME/.config/code/extensions.txt"

@@ -1,5 +1,5 @@
+{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 #!/usr/bin/env zsh
-{{- if eq .chezmoi.os "darwin" }}
 
 # Create VS Code settings directory for macOS
 VSCODE_SETTINGS_DIR="$HOME/Library/Application Support/Code/User"

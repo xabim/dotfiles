@@ -6,7 +6,17 @@ This repository contains my personal dotfiles managed with [chezmoi](https://www
 
 1. **Install chezmoi:**
    ```bash
+   # macOS (Homebrew)
    brew install chezmoi
+
+   # Linux - multiple options:
+   # 1) Install via the official install script (works on most distros)
+   sh -c "$(curl -fsLS https://chezmoi.io/get)"
+
+   # 2) Debian/Ubuntu (deb package via apt - may require adding repo)
+   # See distro docs; a simple approach is the script above or using Homebrew on Linux:
+   # 3) Homebrew on Linux (if you use Linuxbrew)
+   #    brew install chezmoi
    ```
 
 2. **Initialize and apply dotfiles:**

@@ -1,5 +1,5 @@
+{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 #!/usr/bin/env zsh
-{{- if eq .chezmoi.os "darwin" }}
 
 # Enhanced macOS configuration - Additional settings from legacy config
 # This supplements the main run_once_after_configure-macos.sh.tmpl
