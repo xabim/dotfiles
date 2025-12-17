@@ -28,7 +28,7 @@ __pycache__/
 *.class
 
 # Work-specific ignores
-{{- if .isWork }}
+{{- if eq .profile "mac_work" }}
 # In work environment, ignore personal configurations
 private_personal_*
 {{- else }}

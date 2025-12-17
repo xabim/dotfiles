@@ -1,15 +1,15 @@
 {{- $email := promptStringOnce . "email" "Git email address" -}}
 {{- $name := promptStringOnce . "name" "Git full name" -}}
 {{- $signingkey := promptStringOnce . "signingkey" "Git signing key" -}}
-{{- $isWork := promptBoolOnce . "isWork" "Is this a work environment" false -}}
+{{- $profile := promptStringOnce . "profile" "Machine profile (e.g. mac_work, mac_personal, linux_personal)" "mac_personal" -}}
 
 data:
   email: {{ $email | quote }}
   name: {{ $name | quote }}
   signingkey: {{ $signingkey | quote }}
-  isWork: {{ $isWork }}
+  profile: {{ $profile | quote }}
 
-{{- if $isWork }}
+{{- if eq $profile "mac_work" }}
 # Work environment configuration
 sourceDir: {{ .chezmoi.sourceDir | quote }}
 {{- else }}

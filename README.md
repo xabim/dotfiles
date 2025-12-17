@@ -27,10 +27,12 @@ The dotfiles support different configurations based on environment:
 - **Personal setup** (default): Includes personal applications and configurations
 - **Work setup**: Excludes personal applications, includes only work-appropriate tools
 
-### Setting up for work environment
+### Setting up for a specific machine profile
+
+You can select a profile string to control which blocks are applied (for example: `mac_work`, `mac_personal`, `linux_personal`).
 
 ```bash
-chezmoi init --data isWork=true https://github.com/xabim/dotfiles.git
+chezmoi init --data profile=mac_work https://github.com/xabim/dotfiles.git
 chezmoi apply
 cd ~/.local/share/chezmoi
 git remote set-url origin git@github.com:xabim/dotfiles.git

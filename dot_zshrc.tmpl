@@ -83,7 +83,7 @@ fi
 #### 🧯 Quality of life aliases
 
 #### ⭐️ Starship prompt (theme in ~/.config/starship.d/default.toml or ~/.config/starship.d/work.toml)
-{{- if .isWork }}
+{{- if eq .profile "mac_work" }}
 export STARSHIP_CONFIG="$HOME/.config/starship.d/work.toml"
 {{- else }}
 export STARSHIP_CONFIG="$HOME/.config/starship.d/default.toml"
@@ -119,7 +119,7 @@ autoload -U add-zsh-hook
 add-zsh-hook preexec print_expanded_alias
 
 eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
-{{- if .isWork }}
+{{- if eq .profile "mac_work" }}
 # ocm:begin
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(ocm handler init)"

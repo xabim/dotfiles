@@ -42,7 +42,8 @@ dockutil --section others --remove all --no-restart || true
 # Apps to add (order matters)
 APPS=(
   "/Applications/Google Chrome.app"
-  {{- if .isWork }}
+
+  {{- if eq .profile "mac_work" }}
   "/Applications/Slack.app"
   "/Applications/zoom.us.app"
   "/Applications/1Password.app"

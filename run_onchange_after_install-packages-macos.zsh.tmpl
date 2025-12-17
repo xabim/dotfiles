@@ -40,7 +40,7 @@ install_from_brewfile() {
 MAIN_BREWFILE="$HOME/.config/Brewfile"
 install_from_brewfile "$MAIN_BREWFILE"
 
-{{- if .isWork }}
+{{- if eq .profile "mac_work" }}
 # Install from work Brewfile
 WORK_BREWFILE="$HOME/.config/work/Brewfile"
 install_from_brewfile "$WORK_BREWFILE"
