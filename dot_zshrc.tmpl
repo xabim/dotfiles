@@ -120,6 +120,7 @@ add-zsh-hook preexec print_expanded_alias
 
 eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
 {{- if eq .profile "mac_work" }}
+
 # ocm:begin
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(ocm handler init)"

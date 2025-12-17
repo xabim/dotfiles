@@ -97,8 +97,8 @@
 	rebase = false
 
 [gpg]
-{{ if eq .profile "mac_work" -}}
+{{- if eq .profile "mac_work" }}
 	program = /usr/local/bin/gpg
-{{- else -}}
+{{- else }}
 	program = /opt/homebrew/bin/gpg
 {{- end }}

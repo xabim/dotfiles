@@ -7,6 +7,8 @@
 
     "editorRuler.foreground": "#fffff1"
   },
+  "window.title": "${activeEditorShort}${separator}${rootName}${separator}${profileName}",
+  "window.titleBarStyle": "custom",
   "editor.codeLens": false,
   "editor.tabSize": 2,
   "editor.minimap.enabled": false,
@@ -130,5 +132,12 @@
   },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
+{{- if eq .profile "mac_work" }}
+  },
+  "git.blame.editorDecoration.enabled": false,
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilot:gpt-4.1"
+{{- else }}
   }
+{{- end }}
 }
