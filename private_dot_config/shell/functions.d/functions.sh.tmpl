@@ -8,16 +8,34 @@ function open_command() {
   case "$OSTYPE" in
     darwin*)  open_cmd='open' ;;
     cygwin*)  open_cmd='cygstart' ;;
-    linux*)   [[ "$(uname -r)" != *icrosoft* ]] && open_cmd='nohup xdg-open' || {
-                open_cmd='cmd.exe /c start ""'
-                [[ -e "$1" ]] && { 1="$(wslpath -w "${1:a}")" || return 1 }
-              } ;;
+    linux*)
+              if [[ "$(uname -r)" != *icrosoft* ]]; then
+                open_cmd='nohup xdg-open'
+              else
+                # WSL: convert the first argument to a Windows path and use
+                # cmd.exe start if a file/path was passed. We can't assign to
+                # positional parameters with a numeric name ("1=...") so
+                # use set -- to replace them instead.
+                if [[ -n "$1" && -e "$1" ]]; then
+                  local winpath
+                  winpath=$(wslpath -w -- "$1") || return 1
+                  cmd.exe /c start "" "$winpath" &>/dev/null
+                  return
+                else
+                  cmd.exe /c start "" "$@" &>/dev/null
+                  return
+                fi
+              fi ;;
     msys*)    open_cmd='start ""' ;;
     *)        echo "Platform $OSTYPE not supported"
               return 1
               ;;
   esac
-  ${=open_cmd} "$@" &>/dev/null
+  if [[ -n "$open_cmd" ]]; then
+    # Use eval to support multi-word commands stored in open_cmd (e.g.
+    # "nohup xdg-open"). We quote "$@" so arguments are preserved.
+    eval "$open_cmd \"\$@\"" &>/dev/null
+  fi
 }
 
 # Git utilities
