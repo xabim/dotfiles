@@ -94,7 +94,6 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 export PATH=$PATH:/Users/javier.martimonforte/code/work/atko-cic/layer0/.tools/istio/bin
-export PATH=$PATH:/Users/javier.martimonforte/code/work/atko-cic/layer0/.tools/istio/bin
 export PATH=$PATH:$HOME/.local/bin
 
 # Source shell configuration
@@ -106,7 +105,7 @@ os_dir="$HOME/.config/shell/os/linux.d"
 
 for dir in "$HOME/.config/shell/exports.d" "$HOME/.config/shell/aliases.d" "$HOME/.config/shell/functions.d" "$os_dir"; do
   if [ -d "$dir" ]; then
-    for f in "$dir"/*.zsh; do
+    for f in "$dir"/*.sh; do
       [ -r "$f" ] && source "$f"
     done
   fi
@@ -119,8 +118,8 @@ autoload -U add-zsh-hook
 # Register the function to run before a command executes
 add-zsh-hook preexec print_expanded_alias
 
-eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
 {{- if eq .profile "mac_work" }}
+eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
 
 # ocm:begin
 eval "$(/opt/homebrew/bin/brew shellenv)"

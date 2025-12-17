@@ -1,3 +1,4 @@
+{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 alias tt="exa --tree --level=2 --long"
 
 # ls, the common ones I use a lot shortened for rapid fire usage
@@ -82,6 +83,7 @@ if is-at-least 4.2.0; then
   alias -s tar.gz="echo "
   alias -s ace="unace l"
 fi
+{{- end }}
 
 # Jumps
 alias tmp="cd ~/Downloads/tmp"
