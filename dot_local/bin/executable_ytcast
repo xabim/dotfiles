@@ -82,17 +82,13 @@ prompt_smb_password() {
 }
 
 cleanup_on_exit() {
-  # Avoid double execution (INT + EXIT)
   trap - EXIT INT TERM
-
-  if [[ "${DID_MOUNT:-0}" -eq 1 ]] && [[ -n "${MOUNT_NAS:-}" ]]; then
-    if mountpoint -q "$MOUNT_NAS"; then
-      echo "==> Unmount automático: $MOUNT_NAS"
-      sudo umount "$MOUNT_NAS" || true
-    fi
+  local m="${MOUNT_NAS:-}"
+  if [[ "${DID_MOUNT:-0}" -eq 1 ]] && [[ -n "$m" ]] && mountpoint -q "$m"; then
+    echo "==> Unmount automático: $m"
+    sudo umount "$m" || true
   fi
 }
-trap cleanup_on_exit EXIT INT TERM
 
 mount_smb_if_needed() {
   if mountpoint -q "$MOUNT_NAS"; then

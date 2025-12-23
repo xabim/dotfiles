@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
 
 def run(cmd: list[str]) -> int:
-    # streaming output
     p = subprocess.Popen(cmd)
     return p.wait()
 
@@ -34,7 +32,6 @@ def main():
     data = json.loads(channels_path.read_text(encoding="utf-8"))
     channels = data.get("channels", [])
 
-    # One archive file per channel to avoid collisions and keep things tidy
     for ch in channels:
         if ch.get("enabled", True) is False:
             continue
@@ -53,10 +50,8 @@ def main():
         archive_file = archive_dir / f"{slug}.txt"
         archive_file.touch(exist_ok=True)
 
-        # Output template: clean folder by slug
         outtmpl = str(ch_dir / "%(upload_date)s - %(title)s.%(ext)s")
 
-        # Append id + filepath to state.tsv after move
         exec_after_move = (
             "bash -c "
             + " ".join([
@@ -68,17 +63,19 @@ def main():
         )
 
         print(f"\n==> Canal: {name or slug}")
+
         cmd = [
             "yt-dlp",
             "--no-progress",
             "--yes-playlist",
             "--ignore-errors",
+
             "--download-archive", str(archive_file),
 
-            # Helps in many cases; you saw PO token warnings, but it will still download other formats.
-            "--extractor-args", "youtube:player_client=android,ios",
+            # IMPORTANT: do NOT force android/ios clients (PO token issues).
+            # Let yt-dlp pick a working web client.
 
-            "-f", "bestaudio",
+            "-f", "bestaudio/best",
             "--extract-audio",
             "--audio-format", args.audio_format,
             "--audio-quality", args.audio_quality,
@@ -86,11 +83,7 @@ def main():
             "--embed-metadata",
             "--add-metadata",
 
-            # You can re-enable thumbnails if you really want them, but they can be noisy/slow:
-            # "--embed-thumbnail",
-
             "--exec", f"after_move:{exec_after_move}",
-
             "-o", outtmpl,
             url,
         ]
