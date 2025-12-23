@@ -34,6 +34,8 @@ KEEP_PER_CHANNEL="${YTCAST_KEEP_PER_CHANNEL:-60}"
 AUDIO_FORMAT="${YTCAST_AUDIO_FORMAT:-opus}"
 AUDIO_QUALITY="${YTCAST_AUDIO_QUALITY:-64K}"
 MAX_ITEMS_PER_FEED="${YTCAST_MAX_ITEMS_PER_FEED:-200}"
+export YTCAST_JS_RUNTIME="deno"
+
 
 SMB_USER="${YTCAST_SMB_USER:-xabim}"
 
@@ -124,7 +126,9 @@ main() {
     --archive-dir "$ARCHIVE_DIR" \
     --state "$STATE_FILE" \
     --audio-format "$AUDIO_FORMAT" \
-    --audio-quality "$AUDIO_QUALITY"
+    --audio-quality "$AUDIO_QUALITY" \
+    --rss-limit 0
+
 
   echo "==> Rotación GLOBAL: mantener últimos $KEEP_PER_CHANNEL por canal"
   python3 "$PY_DIR/rotate_global.py" --audio-dir "$AUDIO_DIR" --keep "$KEEP_PER_CHANNEL"

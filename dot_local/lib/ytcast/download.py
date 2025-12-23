@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import os
 import subprocess
 import sys
 import urllib.request
 import xml.etree.ElementTree as ET
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 NS = {
     "atom": "http://www.w3.org/2005/Atom",
@@ -21,50 +22,66 @@ def fetch(url: str, timeout: int = 20) -> bytes:
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
 
-def parse_rss_video_urls(xml_bytes: bytes) -> list[tuple[str, str]]:
-    """
-    Returns list of (published_iso, watch_url).
-    """
-    root = ET.fromstring(xml_bytes)
-    items: list[tuple[str, str]] = []
-
-    for entry in root.findall("atom:entry", NS):
-        published = entry.findtext("atom:published", default="", namespaces=NS) or ""
-        link_url = ""
-
-        # Prefer <link rel="alternate" href="...watch?v=...">
-        for link in entry.findall("atom:link", NS):
-            rel = link.attrib.get("rel", "")
-            href = link.attrib.get("href", "")
-            if rel == "alternate" and "watch?v=" in href:
-                link_url = href
-                break
-
-        # Fallback: yt:videoId
-        if not link_url:
-            vid = entry.findtext("yt:videoId", default="", namespaces=NS) or ""
-            if vid:
-                link_url = f"https://www.youtube.com/watch?v={vid}"
-
-        if link_url:
-            items.append((published, link_url))
-
-    return items
-
 def iso_key(published: str) -> float:
     if not published:
         return 0.0
     try:
         if published.endswith("Z"):
             published = published[:-1] + "+00:00"
-        dt = datetime.fromisoformat(published)
-        return dt.timestamp()
+        return datetime.fromisoformat(published).timestamp()
     except Exception:
         return 0.0
 
-def run(cmd: list[str]) -> int:
-    p = subprocess.Popen(cmd)
-    return p.wait()
+def parse_rss(xml_bytes: bytes) -> list[tuple[str, str, str]]:
+    """
+    Returns list of (published_iso, video_id, watch_url)
+    """
+    root = ET.fromstring(xml_bytes)
+    items: list[tuple[str, str, str]] = []
+
+    for entry in root.findall("atom:entry", NS):
+        published = entry.findtext("atom:published", default="", namespaces=NS) or ""
+        vid = entry.findtext("yt:videoId", default="", namespaces=NS) or ""
+
+        watch = ""
+        for link in entry.findall("atom:link", NS):
+            if link.attrib.get("rel") == "alternate":
+                href = link.attrib.get("href", "")
+                if "watch?v=" in href:
+                    watch = href
+                    break
+        if not watch and vid:
+            watch = f"https://www.youtube.com/watch?v={vid}"
+
+        if watch and vid:
+            items.append((published, vid, watch))
+
+    # newest first
+    items.sort(key=lambda t: iso_key(t[0]), reverse=True)
+    return items
+
+def yt_dlp(urls: list[str], archive_file: Path, outtmpl: str, audio_format: str, audio_quality: str) -> int:
+    cmd = [
+        "yt-dlp",
+        "--quiet",
+        "--no-warnings",
+        "--ignore-errors",
+        "--download-archive", str(archive_file),
+
+        # Avoid web/safari JS-heavy path without installing deno
+        "--extractor-args", "youtube:player_client=android,android_music",
+
+        "-f", "bestaudio/best",
+        "--extract-audio",
+        "--audio-format", audio_format,
+        "--audio-quality", audio_quality,
+        "--embed-metadata",
+        "--add-metadata",
+
+        "-o", outtmpl,
+        *urls,
+    ]
+    return subprocess.run(cmd).returncode
 
 def main():
     ap = argparse.ArgumentParser()
@@ -74,7 +91,7 @@ def main():
     ap.add_argument("--state", required=True)
     ap.add_argument("--audio-format", default="opus")
     ap.add_argument("--audio-quality", default="64K")
-    ap.add_argument("--rss-limit", type=int, default=0, help="0 = all entries in RSS, else keep N newest")
+    ap.add_argument("--rss-limit", type=int, default=0, help="0=todo el RSS; si no, solo N más nuevos")
     args = ap.parse_args()
 
     channels_path = Path(args.channels)
@@ -90,6 +107,8 @@ def main():
     data = json.loads(channels_path.read_text(encoding="utf-8"))
     channels = data.get("channels", [])
 
+    total_new = 0
+
     for ch in channels:
         if ch.get("enabled", True) is False:
             continue
@@ -97,31 +116,26 @@ def main():
         name = (ch.get("name") or "").strip()
         slug = (ch.get("slug") or "").strip()
         url = (ch.get("url") or "").strip()
-
         if not slug or not url:
-            print(f"SKIP: channel missing slug/url: {ch}", file=sys.stderr)
             continue
 
-        print(f"\n==> Canal: {name or slug}")
+        print(f"==> Canal: {name or slug}")
 
         try:
-            xml_bytes = fetch(url)
+            rss = fetch(url)
+            items = parse_rss(rss)
         except Exception as e:
-            print(f"WARNING: cannot fetch RSS for {slug}: {e}", file=sys.stderr)
+            print(f"WARNING: RSS fetch/parse failed for {slug}: {e}", file=sys.stderr)
             continue
-
-        items = parse_rss_video_urls(xml_bytes)
-        if not items:
-            print(f"INFO: no entries found in RSS for {slug}")
-            continue
-
-        # newest first
-        items.sort(key=lambda t: iso_key(t[0]), reverse=True)
 
         if args.rss_limit and args.rss_limit > 0:
             items = items[: args.rss_limit]
 
-        urls = [u for _, u in items]
+        if not items:
+            continue
+
+        # Build URL list (newest first)
+        urls = [watch for _, _, watch in items]
 
         ch_dir = audio_dir / slug
         ch_dir.mkdir(parents=True, exist_ok=True)
@@ -131,35 +145,33 @@ def main():
 
         outtmpl = str(ch_dir / "%(upload_date)s - %(title)s.%(ext)s")
 
-        exec_after_move = (
-            "bash -c "
-            + " ".join([
-                "'printf \"%s\\t%s\\n\"",
-                "\"%(id)s\"",
-                "\"%(filepath)s\"",
-                f">> \"{state_path}\"'"
-            ])
+        # Before/after to count *new* downloads without using --exec
+        before = {p.name for p in ch_dir.iterdir() if p.is_file()}
+
+        rc = yt_dlp(
+            urls=urls,
+            archive_file=archive_file,
+            outtmpl=outtmpl,
+            audio_format=args.audio_format,
+            audio_quality=args.audio_quality,
         )
-
-        cmd = [
-            "yt-dlp",
-            "--no-progress",
-            "--ignore-errors",
-            "--download-archive", str(archive_file),
-            "-f", "bestaudio/best",
-            "--extract-audio",
-            "--audio-format", args.audio_format,
-            "--audio-quality", args.audio_quality,
-            "--embed-metadata",
-            "--add-metadata",
-            "--exec", f"after_move:{exec_after_move}",
-            "-o", outtmpl,
-            *urls,
-        ]
-
-        rc = run(cmd)
         if rc != 0:
-            print(f"WARNING: yt-dlp exit code {rc} for channel {slug}", file=sys.stderr)
+            # yt-dlp sometimes returns 1 even if partial success; keep going
+            print(f"WARNING: yt-dlp exit code {rc} (posible parcial) para {slug}", file=sys.stderr)
+
+        after = {p.name for p in ch_dir.iterdir() if p.is_file()}
+        new_files = sorted(after - before)
+
+        # Append to state.tsv without shell quoting issues.
+        # Format: video_id<TAB>absolute_path
+        # We can't 100% map ids to files reliably without extra logic, so we store empty id.
+        if new_files:
+            with state_path.open("a", encoding="utf-8") as f:
+                for fn in new_files:
+                    f.write(f"\t{(ch_dir / fn).as_posix()}\n")
+            total_new += len(new_files)
+
+    print(f"==> Descargas nuevas: {total_new}")
 
 if __name__ == "__main__":
     main()
