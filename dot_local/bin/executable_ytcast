@@ -1,21 +1,32 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ytcast: SMB (Synology) + yt-dlp audio + per-channel RSS (por carpeta) + servidor web local
-# Usage: ytcast
+# ytcast: SMB mount -> download new audio -> rotate -> prune archive -> generate RSS feeds -> serve locally
+#
+# Requirements:
+#   - yt-dlp (recent)
+#   - ffmpeg
+#   - python3
+#   - cifs-utils (mount.cifs)
+#
+# Config file:
+#   ~/.config/ytcast/channels.json
 #
 # Env overrides:
-#   YTCAST_MOUNT_NAS, YTCAST_NAS_IP, YTCAST_NAS_SHARE, YTCAST_SMB_VERS
+#   YTCAST_MOUNT_NAS (default: /music)
+#   YTCAST_NAS_IP (default: 192.168.1.100)
+#   YTCAST_NAS_SHARE (default: music)
+#   YTCAST_SMB_VERS (default: 3.0)
 #   YTCAST_SMB_USER (default: xabim)
+#   YTCAST_SUBDIR (default: yt-podcasts)
 #   YTCAST_PORT (default: 8000)
-#   YTCAST_KEEP_PER_CHANNEL (default: 60)   # GLOBAL para todos
+#   YTCAST_KEEP_PER_CHANNEL (default: 60)
 #   YTCAST_AUDIO_FORMAT (default: opus)
 #   YTCAST_AUDIO_QUALITY (default: 64K)
 #   YTCAST_MAX_ITEMS_PER_FEED (default: 200)
 
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/ytcast"
 PY_DIR="$HOME/.local/lib/ytcast"
-
 CHANNELS_JSON="$CONFIG_DIR/channels.json"
 
 PORT="${YTCAST_PORT:-8000}"
@@ -32,16 +43,13 @@ NAS_IP="${YTCAST_NAS_IP:-192.168.1.100}"
 NAS_SHARE="${YTCAST_NAS_SHARE:-music}"
 SMB_VERS="${YTCAST_SMB_VERS:-3.0}"
 
-# Data layout on NAS
-SUBDIR="${YTCAST_SUBDIR:-youtube-audio}"
+SUBDIR="${YTCAST_SUBDIR:-yt-podcasts}"
 UNC="//$NAS_IP/$NAS_SHARE"
 BASE_DIR="$MOUNT_NAS/$SUBDIR"
 AUDIO_DIR="$BASE_DIR/audio"
 FEEDS_DIR="$BASE_DIR/feeds"
-ARCHIVE_FILE="$BASE_DIR/archive.txt"
+ARCHIVE_DIR="$BASE_DIR/archive"
 STATE_FILE="$BASE_DIR/state.tsv"
-CHANNEL_MAP_JSON="$BASE_DIR/channel_map.json"
-CHANNEL_URLS_TXT="$BASE_DIR/channels_urls.txt"
 
 DID_MOUNT=0
 
@@ -54,17 +62,17 @@ need_cmd mount
 need_cmd mountpoint
 need_cmd sudo
 
-if [[ ! -f "$CHANNELS_JSON" ]]; then
-  echo "ERROR: falta $CHANNELS_JSON"
-  exit 1
-fi
-
-for f in channels_to_urls.py channels_map.py rotate_global.py gen_feeds.py serve.py prune_state.py; do
+for f in download.py rotate_global.py prune_state.py gen_feeds.py serve.py; do
   if [[ ! -f "$PY_DIR/$f" ]]; then
     echo "ERROR: falta $PY_DIR/$f"
     exit 1
   fi
 done
+
+if [[ ! -f "$CHANNELS_JSON" ]]; then
+  echo "ERROR: falta $CHANNELS_JSON"
+  exit 1
+fi
 
 prompt_smb_password() {
   if [[ -z "${SMB_PASSWORD:-}" ]]; then
@@ -74,9 +82,14 @@ prompt_smb_password() {
 }
 
 cleanup_on_exit() {
-  if [[ "$DID_MOUNT" -eq 1 ]]; then
-    echo "==> Unmount automático: $MOUNT_NAS"
-    sudo umount "$MOUNT_NAS" || true
+  # Avoid double execution (INT + EXIT)
+  trap - EXIT INT TERM
+
+  if [[ "${DID_MOUNT:-0}" -eq 1 ]] && [[ -n "${MOUNT_NAS:-}" ]]; then
+    if mountpoint -q "$MOUNT_NAS"; then
+      echo "==> Unmount automático: $MOUNT_NAS"
+      sudo umount "$MOUNT_NAS" || true
+    fi
   fi
 }
 trap cleanup_on_exit EXIT INT TERM
@@ -98,71 +111,40 @@ mount_smb_if_needed() {
 }
 
 prepare_dirs() {
-  mkdir -p "$CONFIG_DIR"
-  mkdir -p "$AUDIO_DIR" "$FEEDS_DIR"
-  touch "$ARCHIVE_FILE" "$STATE_FILE"
-}
-
-build_channel_files() {
-  echo "==> Preparando URLs y mapping desde channels.json"
-  python3 "$PY_DIR/channels_to_urls.py" --in "$CHANNELS_JSON" --out "$CHANNEL_URLS_TXT"
-  python3 "$PY_DIR/channels_map.py" --in "$CHANNELS_JSON" --out "$CHANNEL_MAP_JSON"
-}
-
-download_audio() {
-  echo "==> Descargando audio (solo nuevos) a $AUDIO_DIR"
-  yt-dlp \
-    --no-progress \
-    --yes-playlist \
-    --ignore-errors \
-    --download-archive "$ARCHIVE_FILE" \
-    --extract-audio \
-    --audio-format "$AUDIO_FORMAT" \
-    --audio-quality "$AUDIO_QUALITY" \
-    --embed-metadata \
-    --embed-thumbnail \
-    --add-metadata \
-    --exec after_move:"bash -c 'printf \"%s\t%s\n\" \"%(id)s\" \"%(filepath)s\" >> \"${STATE_FILE}\"'" \
-    -o "$AUDIO_DIR/%(channel)s/%(upload_date)s - %(title)s.%(ext)s" \
-    -a "$CHANNEL_URLS_TXT"
-}
-
-rotate_global() {
-  echo "==> Rotación GLOBAL: mantener últimos $KEEP_PER_CHANNEL por canal (todas las carpetas por igual)"
-  python3 "$PY_DIR/rotate_global.py" --audio-dir "$AUDIO_DIR" --keep "$KEEP_PER_CHANNEL"
-}
-
-prune_state_and_archive() {
-  echo "==> Limpieza de state.tsv y archive.txt (alineada con rotación)"
-  python3 "$PY_DIR/prune_state.py" --state "$STATE_FILE" --archive "$ARCHIVE_FILE"
-}
-
-generate_feeds() {
-  echo "==> Generando feeds (1 por carpeta) en $FEEDS_DIR"
-  python3 "$PY_DIR/gen_feeds.py" \
-    --base-dir "$BASE_DIR" \
-    --audio-dir "$AUDIO_DIR" \
-    --feeds-dir "$FEEDS_DIR" \
-    --channel-map "$CHANNEL_MAP_JSON" \
-    --port "$PORT" \
-    --max-items "$MAX_ITEMS_PER_FEED"
-}
-
-serve() {
-  echo "==> Servidor web local (CTRL+C para parar)"
-  python3 "$PY_DIR/serve.py" --dir "$BASE_DIR" --port "$PORT"
+  mkdir -p "$BASE_DIR" "$AUDIO_DIR" "$FEEDS_DIR" "$ARCHIVE_DIR"
+  touch "$STATE_FILE"
 }
 
 main() {
   mount_smb_if_needed
-  mkdir -p "$BASE_DIR"
   prepare_dirs
-  build_channel_files
-  download_audio
-  rotate_global
-  prune_state_and_archive
-  generate_feeds
-  serve
+
+  echo "==> Descargando audio (solo nuevos) a $AUDIO_DIR"
+  python3 "$PY_DIR/download.py" \
+    --channels "$CHANNELS_JSON" \
+    --audio-dir "$AUDIO_DIR" \
+    --archive-dir "$ARCHIVE_DIR" \
+    --state "$STATE_FILE" \
+    --audio-format "$AUDIO_FORMAT" \
+    --audio-quality "$AUDIO_QUALITY"
+
+  echo "==> Rotación GLOBAL: mantener últimos $KEEP_PER_CHANNEL por canal"
+  python3 "$PY_DIR/rotate_global.py" --audio-dir "$AUDIO_DIR" --keep "$KEEP_PER_CHANNEL"
+
+  echo "==> Limpieza de state.tsv y archivos de archive (alineada con rotación)"
+  python3 "$PY_DIR/prune_state.py" --state "$STATE_FILE" --archive-dir "$ARCHIVE_DIR"
+
+  echo "==> Generando feeds (1 por canal slug) en $FEEDS_DIR"
+  python3 "$PY_DIR/gen_feeds.py" \
+    --channels "$CHANNELS_JSON" \
+    --base-dir "$BASE_DIR" \
+    --audio-dir "$AUDIO_DIR" \
+    --feeds-dir "$FEEDS_DIR" \
+    --port "$PORT" \
+    --max-items "$MAX_ITEMS_PER_FEED"
+
+  echo "==> Servidor web local (CTRL+C para parar)"
+  python3 "$PY_DIR/serve.py" --dir "$BASE_DIR" --port "$PORT"
 }
 
 main "$@"

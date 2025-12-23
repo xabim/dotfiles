@@ -1,47 +1,66 @@
 #!/usr/bin/env python3
 import argparse
 import os
+from pathlib import Path
 
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--state", required=True, help="state.tsv path (id\\tfilepath)")
-    p.add_argument("--archive", required=True, help="archive.txt path (one id per line)")
-    args = p.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--state", required=True)
+    ap.add_argument("--archive-dir", required=True)
+    args = ap.parse_args()
 
-    state_path = args.state
-    archive_path = args.archive
+    state_path = Path(args.state)
+    archive_dir = Path(args.archive_dir)
 
-    if not os.path.exists(state_path):
+    if not state_path.exists():
         return
+    archive_dir.mkdir(parents=True, exist_ok=True)
 
-    kept_lines = []
-    kept_ids = set()
+    # Read & keep only existing paths
+    kept_lines: list[str] = []
+    kept_ids_by_slug: dict[str, set[str]] = {}
 
-    with open(state_path, "r", encoding="utf-8", errors="replace") as f:
-        for line in f:
-            line = line.rstrip("\n")
-            if not line.strip():
-                continue
-            parts = line.split("\t", 1)
-            if len(parts) != 2:
-                continue
-            vid, path = parts[0].strip(), parts[1].strip()
-            if not vid or not path:
-                continue
-            if os.path.exists(path):
-                kept_lines.append(f"{vid}\t{path}")
-                kept_ids.add(vid)
+    for raw in state_path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if not raw.strip():
+            continue
+        parts = raw.split("\t", 1)
+        if len(parts) != 2:
+            continue
+        vid, path = parts[0].strip(), parts[1].strip()
+        if not vid or not path:
+            continue
+        if not os.path.exists(path):
+            continue
 
-    tmp_state = state_path + ".tmp"
-    with open(tmp_state, "w", encoding="utf-8") as out:
-        out.write("\n".join(kept_lines) + ("\n" if kept_lines else ""))
-    os.replace(tmp_state, state_path)
+        kept_lines.append(f"{vid}\t{path}")
 
-    tmp_archive = archive_path + ".tmp"
-    with open(tmp_archive, "w", encoding="utf-8") as out:
-        for vid in sorted(kept_ids):
-            out.write(vid + "\n")
-    os.replace(tmp_archive, archive_path)
+        # Infer slug from path .../audio/<slug>/...
+        # We try to find "/audio/<slug>/" segment.
+        norm = path.replace("\\", "/")
+        slug = None
+        if "/audio/" in norm:
+            try:
+                slug = norm.split("/audio/", 1)[1].split("/", 1)[0]
+            except Exception:
+                slug = None
+        if not slug:
+            slug = "_unknown"
+
+        kept_ids_by_slug.setdefault(slug, set()).add(vid)
+
+    # Rewrite state.tsv
+    tmp_state = state_path.with_suffix(".tsv.tmp")
+    tmp_state.write_text("\n".join(kept_lines) + ("\n" if kept_lines else ""), encoding="utf-8")
+    tmp_state.replace(state_path)
+
+    # Rewrite each archive file based on remaining ids
+    for archive_file in archive_dir.glob("*.txt"):
+        slug = archive_file.stem
+        kept = kept_ids_by_slug.get(slug, set())
+
+        tmp = archive_file.with_suffix(".txt.tmp")
+        tmp.write_text("".join(f"{vid}\n" for vid in sorted(kept)), encoding="utf-8")
+        tmp.replace(archive_file)
 
 if __name__ == "__main__":
     main()

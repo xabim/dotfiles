@@ -55,7 +55,11 @@ def main():
         print(f"  (no existe {feeds_dir}, ¿generaste feeds?)")
 
     print("Server running. CTRL+C para parar.\n")
-    http.server.ThreadingHTTPServer(("0.0.0.0", args.port), handler).serve_forever()
+
+    try:
+        http.server.ThreadingHTTPServer(("0.0.0.0", args.port), handler).serve_forever()
+    except KeyboardInterrupt:
+        print("\nParando servidor...\n")
 
 if __name__ == "__main__":
     main()

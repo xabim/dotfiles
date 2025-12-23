@@ -4,23 +4,17 @@ import html
 import json
 import mimetypes
 import os
-import re
 from datetime import datetime, timezone
+from pathlib import Path
 
 AUDIO_EXTS = (".opus", ".mp3", ".m4a", ".aac", ".ogg", ".wav")
 
 def rfc2822(dt: datetime) -> str:
     return dt.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-def slugify(name: str) -> str:
-    s = name.strip().lower()
-    s = re.sub(r"[^a-z0-9]+", "-", s)
-    s = re.sub(r"-+", "-", s).strip("-")
-    return s or "channel"
-
-def write_feed(feed_path: str, title: str, description: str, channel_items: list, base_url: str):
+def write_feed(feed_path: Path, title: str, description: str, items: list, base_url: str):
     now = datetime.now(timezone.utc)
-    with open(feed_path, "w", encoding="utf-8") as f:
+    with feed_path.open("w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         f.write('<rss version="2.0">\n')
         f.write('<channel>\n')
@@ -29,7 +23,7 @@ def write_feed(feed_path: str, title: str, description: str, channel_items: list
         f.write(f"<description>{html.escape(description)}</description>\n")
         f.write(f"<lastBuildDate>{rfc2822(now)}</lastBuildDate>\n")
 
-        for mtime, size, rel_url, display_title, mime in channel_items:
+        for mtime, size, rel_url, display_title, mime in items:
             dt = datetime.fromtimestamp(mtime, tz=timezone.utc)
             url = f"{base_url}/{rel_url}"
             f.write("<item>\n")
@@ -42,50 +36,55 @@ def write_feed(feed_path: str, title: str, description: str, channel_items: list
         f.write("</channel>\n</rss>\n")
 
 def main():
-    p = argparse.ArgumentParser()
-    p.add_argument("--base-dir", required=True)
-    p.add_argument("--audio-dir", required=True)
-    p.add_argument("--feeds-dir", required=True)
-    p.add_argument("--channel-map", required=True)
-    p.add_argument("--port", type=int, required=True)
-    p.add_argument("--max-items", type=int, default=200)
-    args = p.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--channels", required=True)
+    ap.add_argument("--base-dir", required=True)
+    ap.add_argument("--audio-dir", required=True)
+    ap.add_argument("--feeds-dir", required=True)
+    ap.add_argument("--port", type=int, required=True)
+    ap.add_argument("--max-items", type=int, default=200)
+    args = ap.parse_args()
 
-    base_dir = os.path.abspath(args.base_dir)
-    audio_dir = os.path.abspath(args.audio_dir)
-    feeds_dir = os.path.abspath(args.feeds_dir)
-    os.makedirs(feeds_dir, exist_ok=True)
+    channels_path = Path(args.channels)
+    base_dir = Path(args.base_dir).resolve()
+    audio_dir = Path(args.audio_dir).resolve()
+    feeds_dir = Path(args.feeds_dir).resolve()
+    feeds_dir.mkdir(parents=True, exist_ok=True)
 
+    # Placeholder; serve.py will patch it to the actual LAN IP
     base_url_placeholder = f"http://__HOST__:{args.port}"
 
-    with open(args.channel_map, "r", encoding="utf-8") as f:
-        cmap = json.load(f)
+    data = json.loads(channels_path.read_text(encoding="utf-8"))
+    channels = data.get("channels", [])
 
-    # Map URL -> {name, slug} for pretty feed filenames.
-    # We still generate feeds "por carpeta" (porque no queremos depender de folder config).
-    url_to_meta = {k: v for k, v in cmap.get("by_url", {}).items() if v.get("enabled", True)}
+    index = []
 
-    # We can't reliably map a folder to a URL without storing extra state, so:
-    # - title: folder name (lo que crea yt-dlp)
-    # - filename: slug del nombre humano si existe solo 1 canal con ese nombre; si no, slug del folder.
-    # For simplicity, usamos slug del folder siempre. (URLs estables)
-    for folder in sorted(os.listdir(audio_dir)):
-        ch_path = os.path.join(audio_dir, folder)
-        if not os.path.isdir(ch_path):
+    for ch in channels:
+        if ch.get("enabled", True) is False:
+            continue
+
+        name = (ch.get("name") or "").strip()
+        slug = (ch.get("slug") or "").strip()
+        if not slug:
+            continue
+
+        ch_path = audio_dir / slug
+        if not ch_path.is_dir():
+            # No audio yet
             continue
 
         items = []
         for fn in os.listdir(ch_path):
             if not fn.lower().endswith(AUDIO_EXTS):
                 continue
-            full = os.path.join(ch_path, fn)
+            full = ch_path / fn
             try:
-                st = os.stat(full)
+                st = full.stat()
             except FileNotFoundError:
                 continue
 
-            rel = os.path.relpath(full, base_dir).replace(os.sep, "/")
-            mime, _ = mimetypes.guess_type(full)
+            rel = full.resolve().relative_to(base_dir).as_posix()
+            mime, _ = mimetypes.guess_type(str(full))
             if not mime:
                 mime = "audio/mpeg"
             display_title = os.path.splitext(fn)[0]
@@ -94,26 +93,18 @@ def main():
         items.sort(key=lambda x: x[0], reverse=True)
         items = items[: args.max_items]
 
-        name = folder
-        slug = slugify(folder)
-        feed_path = os.path.join(feeds_dir, f"{slug}.xml")
-
+        feed_path = feeds_dir / f"{slug}.xml"
         write_feed(
             feed_path=feed_path,
             title=f"{name} (YouTube Audio)",
             description=f"Audio-only feed for {name}",
-            channel_items=items,
+            items=items,
             base_url=base_url_placeholder,
         )
 
-    # index
-    index_path = os.path.join(feeds_dir, "index.json")
-    feeds = []
-    for fn in sorted(os.listdir(feeds_dir)):
-        if fn.endswith(".xml"):
-            feeds.append({"file": fn, "url_path": f"/feeds/{fn}"})
-    with open(index_path, "w", encoding="utf-8") as idx:
-        json.dump({"feeds": feeds}, idx, ensure_ascii=False, indent=2)
+        index.append({"slug": slug, "name": name, "file": feed_path.name, "url_path": f"/feeds/{feed_path.name}"})
+
+    (feeds_dir / "index.json").write_text(json.dumps({"feeds": index}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 if __name__ == "__main__":
     main()

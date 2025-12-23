@@ -1,7 +1,8 @@
 {
   "channels": [
     {
-      "name": "Garcia Mascarell: Correr y montaña",
+      "name": "García Mascarell: correr y montaña",
+      "slug": "garcia-mascarell",
       "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCrC6sxVpzqSkmSEUony6xvA",
       "enabled": true
     }
