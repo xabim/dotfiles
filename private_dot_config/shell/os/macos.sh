@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "darwin") (or (eq .profile "mac_work") (eq .profile "mac_personal")) -}}
 # -----------------
 # macOS Specific Configuration
 # -----------------
@@ -38,4 +37,3 @@ function hidehidden() {
   defaults write com.apple.finder AppleShowAllFiles NO
   killall Finder
 }
-{{ end }}

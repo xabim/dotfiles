@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (or (eq .profile "linux_work") (eq .profile "linux_personal")) -}}
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -126,4 +125,3 @@ for dir in "$HOME/.config/shell/exports.d" "$HOME/.config/shell/aliases.d" "$HOM
     done
   fi
 done
-{{- end -}}

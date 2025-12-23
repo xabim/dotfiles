@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (or (eq .profile "linux_work") (eq .profile "linux_personal")) -}}
 #!/usr/bin/env bash
 # Sourceable + ejecutable: backup cifrado (LUKS) desde Synology por SMB (CIFS) + rsync
 # SMB con password interactiva (NO credentials file)
@@ -161,4 +160,3 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   [[ $# -gt 0 ]] || { backup_usage; exit 1; }
   backup_many "$@"
 fi
-{{- end -}}

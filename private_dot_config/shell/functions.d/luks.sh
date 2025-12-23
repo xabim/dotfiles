@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (or (eq .profile "linux_work") (eq .profile "linux_personal")) -}}
 luks_format_disk() {
   set -euo pipefail
 
@@ -89,4 +88,3 @@ luks_format_disk() {
 
   echo "🏁 Listo."
 }
-{{- end -}}

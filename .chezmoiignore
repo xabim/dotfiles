@@ -27,18 +27,21 @@ Thumbs.db
 __pycache__/
 *.class
 
-# Work-specific ignores
-{{- if eq .profile "mac_work" }}
-# In work environment, ignore personal configurations
-private_personal_*
-{{- else }}
-# In personal environment, ignore work configurations
-private_work_*
+{{- if or (ne .profile "mac_work") (ne .profile "mac_personal") -}}
+# In non macOS environment, ignore personal configurations
+.config/shell/os/macos.sh
+.config/shell/starship.d/*
+.config/shell/wezterm/*
+.config/shell/Brewfile
 {{- end }}
 
-{{- if and (ne .chezmoi.os "linux") (or (ne .profile "linux_work") (ne .profile "linux_personal")) -}}
+{{- if ne .profile "linux_personal" -}}
 # Ignore Linux-specific configurations on non-Linux systems
 .config/ytcast/**
 .local/lib/**
 .local/bin/ytcast
+.config/shell/functions.d/nas.sh
+.config/shell/functions.d/luks.sh
+.bashrc
+.config/shell/os/linux.sh
 {{- end -}}
