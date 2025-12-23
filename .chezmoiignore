@@ -35,3 +35,10 @@ private_personal_*
 # In personal environment, ignore work configurations
 private_work_*
 {{- end }}
+
+{{- if and (ne .chezmoi.os "linux") (or (ne .profile "linux_work") (ne .profile "linux_personal")) -}}
+# Ignore Linux-specific configurations on non-Linux systems
+.config/ytcast/**
+.local/lib/**
+.local/bin/ytcast
+{{- end -}}
