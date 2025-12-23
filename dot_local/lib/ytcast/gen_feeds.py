@@ -12,22 +12,29 @@ AUDIO_EXTS = (".opus", ".mp3", ".m4a", ".aac", ".ogg", ".wav")
 def rfc2822(dt: datetime) -> str:
     return dt.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-def write_feed(feed_path: Path, title: str, description: str, items: list, base_url: str):
+def write_feed(feed_path: Path, title: str, description: str, items: list, base_url: str, slug: str):
     now = datetime.now(timezone.utc)
     with feed_path.open("w", encoding="utf-8") as f:
         f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write('<rss version="2.0">\n')
-        f.write('<channel>\n')
+        f.write(
+            '<rss version="2.0" '
+            'xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">\n'
+        )
+        f.write("<channel>\n")
         f.write(f"<title>{html.escape(title)}</title>\n")
         f.write(f"<link>{html.escape(base_url)}</link>\n")
         f.write(f"<description>{html.escape(description)}</description>\n")
         f.write(f"<lastBuildDate>{rfc2822(now)}</lastBuildDate>\n")
+
+        # Podcast artwork (local)
+        f.write(f'<itunes:image href="{html.escape(base_url)}/artwork/{html.escape(slug)}.jpg"/>\n')
 
         for mtime, size, rel_url, display_title, mime in items:
             dt = datetime.fromtimestamp(mtime, tz=timezone.utc)
             url = f"{base_url}/{rel_url}"
             f.write("<item>\n")
             f.write(f"  <title>{html.escape(display_title)}</title>\n")
+            f.write(f"  <link>{html.escape(url)}</link>\n")
             f.write(f"  <guid isPermaLink='false'>{html.escape(url)}</guid>\n")
             f.write(f"  <pubDate>{rfc2822(dt)}</pubDate>\n")
             f.write(f"  <enclosure url='{html.escape(url)}' length='{size}' type='{html.escape(mime)}'/>\n")
@@ -51,7 +58,6 @@ def main():
     feeds_dir = Path(args.feeds_dir).resolve()
     feeds_dir.mkdir(parents=True, exist_ok=True)
 
-    # Placeholder; serve.py will patch it to the actual LAN IP
     base_url_placeholder = f"http://__HOST__:{args.port}"
 
     data = json.loads(channels_path.read_text(encoding="utf-8"))
@@ -70,7 +76,6 @@ def main():
 
         ch_path = audio_dir / slug
         if not ch_path.is_dir():
-            # No audio yet
             continue
 
         items = []
@@ -100,11 +105,15 @@ def main():
             description=f"Audio-only feed for {name}",
             items=items,
             base_url=base_url_placeholder,
+            slug=slug,
         )
 
         index.append({"slug": slug, "name": name, "file": feed_path.name, "url_path": f"/feeds/{feed_path.name}"})
 
-    (feeds_dir / "index.json").write_text(json.dumps({"feeds": index}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (feeds_dir / "index.json").write_text(
+        json.dumps({"feeds": index}, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 if __name__ == "__main__":
     main()
