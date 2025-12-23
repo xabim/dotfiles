@@ -13,7 +13,7 @@ set -euo pipefail
 #   ~/.config/ytcast/channels.json
 #
 # Env overrides:
-#   YTCAST_MOUNT_NAS (default: /music)
+#   YTCAST_MOUNT_NAS (default: /mnt/music)
 #   YTCAST_NAS_IP (default: 192.168.1.100)
 #   YTCAST_NAS_SHARE (default: music)
 #   YTCAST_SMB_VERS (default: 3.0)
@@ -38,7 +38,7 @@ MAX_ITEMS_PER_FEED="${YTCAST_MAX_ITEMS_PER_FEED:-200}"
 SMB_USER="${YTCAST_SMB_USER:-xabim}"
 
 # SMB mount options (embedded)
-MOUNT_NAS="${YTCAST_MOUNT_NAS:-/music}"
+MOUNT_NAS="${YTCAST_MOUNT_NAS:-/mnt/music}"
 NAS_IP="${YTCAST_NAS_IP:-192.168.1.100}"
 NAS_SHARE="${YTCAST_NAS_SHARE:-music}"
 SMB_VERS="${YTCAST_SMB_VERS:-3.0}"
