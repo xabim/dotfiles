@@ -6,6 +6,21 @@ import socket
 import sys
 from pathlib import Path
 
+class RSSHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        # CORS por si algún cliente lo necesita (no molesta)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        super().end_headers()
+
+    def guess_type(self, path):
+        # Forzar content-types más "podcast friendly"
+        if path.endswith(".xml"):
+            return "application/rss+xml; charset=utf-8"
+        if path.endswith(".opus"):
+            # Muchos clientes aceptan audio/ogg
+            return "audio/ogg"
+        return super().guess_type(path)
+
 def guess_local_ip() -> str:
     ip = "127.0.0.1"
     try:
@@ -43,7 +58,6 @@ def main():
     patch_xml_host(base_dir, host, args.port)
 
     os.chdir(base_dir)
-    handler = http.server.SimpleHTTPRequestHandler
 
     print("\nAñade estos feeds en tu app de podcasts (misma Wi-Fi):\n")
     feeds_dir = base_dir / "feeds"
@@ -57,7 +71,7 @@ def main():
     print("Server running. CTRL+C para parar.\n")
 
     try:
-        http.server.ThreadingHTTPServer(("0.0.0.0", args.port), handler).serve_forever()
+        http.server.ThreadingHTTPServer(("0.0.0.0", args.port), RSSHandler).serve_forever()
     except KeyboardInterrupt:
         print("\nParando servidor...\n")
 
