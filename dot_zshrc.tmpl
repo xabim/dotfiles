@@ -119,6 +119,7 @@ autoload -U add-zsh-hook
 add-zsh-hook preexec print_expanded_alias
 
 {{- if eq .profile "mac_work" }}
+
 eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by https://mise.run/zsh
 
 # ocm:begin
