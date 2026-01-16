@@ -36,7 +36,9 @@ truncate_to_repo = false
 [git_branch]
 style = 'fg:green'
 symbol = ' '
-format = '[on](white) [$symbol$branch ]($style)'
+format = '[on](white) [$symbol$branch$tag ]($style)'
+tag_symbol = ' 🏷️ '
+tag_style = 'fg:yellow'
 
 [git_status]
 style = 'fg:red'
