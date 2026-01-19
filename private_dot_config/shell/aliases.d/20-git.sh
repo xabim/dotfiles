@@ -76,9 +76,6 @@ alias gignore='git update-index --assume-unchanged'
 alias gignored='git ls-files -v | grep "^[[:lower:]]"'
 alias git-svn-dcommit-push='git svn dcommit && git push github main:svntrunk'
 
-alias gk='\gitk --all --branches'
-alias gke='\gitk --all $(git log -g --pretty=%h)'
-
 alias gl='git pull'
 alias glg='git log --stat'
 alias glgp='git log --stat -p'
