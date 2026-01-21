@@ -40,6 +40,7 @@ __pycache__/
 .config/ytcast/**
 .local/lib/**
 .local/bin/ytcast
+.local/bin/backup_external
 .config/shell/functions.d/nas.sh
 .config/shell/functions.d/luks.sh
 .bashrc
