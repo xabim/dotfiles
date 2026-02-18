@@ -13,7 +13,7 @@ term-bg-red() {
 }
 
 term-bg-reset() {
-  local title="WezTerm"
+  local title="Ghostty"
 
   printf "\x1b]111\x1b\\"
   printf "\033]2;%s\007" "$title"

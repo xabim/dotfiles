@@ -1,0 +1,74 @@
+# Ghostty Terminal Configuration
+# Documentation: https://ghostty.org/docs/config
+
+# === Font Configuration ===
+font-family = JetBrains Mono
+font-style = Bold
+font-size = 25
+
+# === Theme ===
+theme = nord
+
+# === Cursor ===
+cursor-style = bar
+cursor-style-blink = true
+
+# === Window Settings ===
+# Start in fullscreen by default
+fullscreen = true
+
+# Hide macOS title bar (keeps rounded corners and borders)
+macos-titlebar-style = hidden
+
+# Disable close confirmation prompts
+confirm-close-surface = false
+
+# Window padding (matches WezTerm: left/right=3, top/bottom=0)
+window-padding-x = 3
+window-padding-y = 0
+
+# New windows inherit working directory from current window
+window-inherit-working-directory = true
+
+# === macOS-Specific Settings ===
+# Use native macOS fullscreen mode
+macos-non-native-fullscreen = false
+
+# Make Option key behave as Alt (useful for shell/vim shortcuts)
+macos-option-as-alt = true
+
+# === Tab Bar ===
+# Show tab bar automatically (when >1 tab)
+window-show-tab-bar = auto
+
+# === Scrollback ===
+# Keep default limit (~10MB) for vast scrollback history
+# (Ghostty uses bytes, not lines. Default is 10,000,000 bytes)
+
+# === Shell Integration ===
+# Auto-detect and inject shell integration for prompt marking,
+# working directory reporting, command status, etc.
+shell-integration = detect
+
+# === Keybindings ===
+# Note: Most WezTerm keybinds are already defaults in Ghostty:
+# - ⌘D = new_split:right (horizontal split)
+# - ⌘⇧D = new_split:down (vertical split)  
+# - ⌘Enter = toggle_fullscreen
+# We only need to add F11 for fullscreen toggle:
+
+keybind = f11=toggle_fullscreen
+
+# Quake-style dropdown terminal (global keybind)
+# Press ⌘` from anywhere to toggle quick terminal
+keybind = global:super+grave_accent=toggle_quick_terminal
+
+# === Additional Quality-of-Life Settings ===
+# Don't copy to clipboard on selection (macOS default behavior)
+copy-on-select = false
+
+# Window resize overlay shows dimensions during resize
+window-resize-overlay = always
+
+# Confirm before quitting Ghostty entirely (when closing last window)
+quit-after-last-window-closed = true
