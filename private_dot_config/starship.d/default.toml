@@ -2,6 +2,7 @@ format = """
 $directory\
 $git_branch\
 $git_status\
+$git_commit\
 $fill\
 $python\
 $lua\
@@ -35,14 +36,19 @@ truncate_to_repo = false
 
 [git_branch]
 style = 'fg:green'
-symbol = ' '
 format = '[on](white) [$symbol$branch$tag ]($style)'
-tag_symbol = ' 🏷️ '
-tag_style = 'fg:yellow'
+symbol = ' 🏷️ '
 
 [git_status]
 style = 'fg:red'
 format = '([$all_status$ahead_behind]($style) )'
+
+[git_commit]
+style = 'fg:yellow'
+format = '[($tag )]($style)'
+tag_symbol = '🔖 '
+only_detached = false
+tag_disabled = false
 
 [fill]
 symbol = ' '
