@@ -126,5 +126,14 @@ eval "$(/Users/javier.martimonforte/.local/bin/mise activate zsh)" # added by ht
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(ocm handler init)"
 # ocm:end
+
+# BEGIN Slick Certificate Management
+export AWS_CA_BUNDLE="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+export SSL_CERT_FILE="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+export NODE_EXTRA_CA_CERTS="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+export REQUESTS_CA_BUNDLE="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+export CURL_CA_BUNDLE="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+export DENO_CERT="/Users/javier.martimonforte/.local/prisma_certificates.pem"
+# END Slick Certificate Management
 {{- end }}
 {{- end }}
