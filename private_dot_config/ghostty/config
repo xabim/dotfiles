@@ -45,3 +45,5 @@ copy-on-select = false
 
 # Confirm before quitting Ghostty entirely (when closing last window)
 quit-after-last-window-closed = true
+
+scrollback-limit = 4294967295

@@ -54,8 +54,10 @@
   "gopls": {},
   "workbench.iconTheme": "symbols",
   "cSpell.userWords": [
+    "atko",
     "awshelper",
     "Awsvpc",
+    "boolplanmodifier",
     "btrfs",
     "bubbletea",
     "bubblezone",
@@ -64,7 +66,9 @@
     "cloudinit",
     "cloudwatchlogs",
     "codereview",
+    "controlv",
     "dockerlib",
+    "durationpb",
     "endfor",
     "fakellan",
     "Fargate",
@@ -83,9 +87,12 @@
     "nvme",
     "ONCALL",
     "Pazeculan",
+    "planmodifier",
     "pokedex",
     "Pokédex",
     "Populator",
+    "providerplugin",
+    "providerutil",
     "putona",
     "rabbitmq",
     "releasever",
@@ -95,9 +102,11 @@
     "showduplicates",
     "socat",
     "splitted",
+    "stringplanmodifier",
     "Sumologic",
     "termenv",
     "textinput",
+    "tfsdk",
     "tidwall",
     "tonumber",
     "toset",
@@ -138,7 +147,20 @@
   "gitlens.ai.model": "vscode",
   "gitlens.ai.vscode.model": "copilot:gpt-4.1",
   "workbench.secondarySideBar.defaultVisibility": "visible",
-  "chat.viewSessions.enabled": false
+  "vs-kubernetes": {
+    "vs-kubernetes.minikube-show-information-expiration": "2026-03-14T08:34:04.505Z"
+  },
+  "chat.viewSessions.orientation": "stacked",
+  "chat.viewSessions.enabled": false,
+  "chat.tips.enabled": false,
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "https://www.vaultproject.io": {
+      "approveRequest": true,
+      "approveResponse": false
+    }
+  }
 {{- else }}
   }
 {{- end }}
