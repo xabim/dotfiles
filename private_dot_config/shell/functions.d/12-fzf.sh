@@ -19,6 +19,7 @@ fjq() {
       --header "Write the jq filter (e.g., .[0].name) and press ENTER" | tail -1)
 
   if [ -n "$query" ]; then
+    echo "# jq filter: $query" >&2
     jq "$query" "$temp"
   fi
 
